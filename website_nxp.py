@@ -1,70 +1,12 @@
+
+import requests
 from bs4 import BeautifulSoup
 
-# Sample HTML content
-html_content = '''
-<div class="card1 band" id="press-release">
-    <section class="section-lead is-secondary">
-      <div class="section-lead-header">
-        <h2 class="section-lead-title">Featured Press Releases</h2>
-      </div>
-    </section>
-
-    <div class="card1-list has-three is-tertiary">
-
-        <div class="card1-column">
-          <div class="card1-item">
-            <figure class="card1-image">
-              <img src="/assets/images/en/photography/FINANCIAL-RELEASE-IMG.jpg" alt="NXP Semiconductors Reports First Quarter 2024 Results Image">
-            </figure>
-            <div class="card1-header">
-              <h3 class="card1-title">
-                <a datavalue="NXP Semiconductors Reports First Quarter 2024 Results Click" href="https://media.nxp.com/news-releases/news-release-details/nxp-semiconductors-reports-first-quarter-2024-results">NXP Semiconductors Reports First Quarter 2024 Results</a>
-              </h3>
-              <p class="metadata">Apr 29, 2024</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="card1-column">
-          <div class="card1-item">
-            <figure class="card1-image">
-              <img src="/assets/images/en/photography/newsroom-thumbnail.png" alt="NXP Semiconductors Announces Conference Call to Review First Quarter 2024 Financial Results Image">
-            </figure>
-            <div class="card1-header">
-              <h3 class="card1-title">
-                <a datavalue="NXP Semiconductors Announces Conference Call to Review First Quarter 2024 Financial Results Click" href="/company/about-nxp/nxp-semiconductors-announces-conference-call-to-review-first-quarter-2024-financial-results:NW-NXP-CONFERENCE-CALL-FIRST-QUARTER-2024">NXP Semiconductors Announces Conference Call to Review First Quarter 2024 Financial Results</a>
-              </h3>
-              <p class="metadata">Apr 11, 2024</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="card1-column">
-          <div class="card1-item">
-            <figure class="card1-image">
-              <img src="/assets/images/en/photography/NW-NXP-BREAKS-THROUGH-OG.jpg" alt="NXP Breaks Through Integration Barriers for Software-Defined Vehicle Development with Open S32 CoreRide Platform Image">
-            </figure>
-            <div class="card1-header">
-              <h3 class="card1-title">
-                <a datavalue="NXP Breaks Through Integration Barriers for Software-Defined Vehicle Development with Open S32 CoreRide Platform Click" href="https://www.nxp.com/company/about-nxp/nxp-breaks-through-integration-barriers-for-software-defined-vehicle-development-with-open-s32-coreride-platform:NW-NXP-BREAKS-THROUGH-AB">NXP Breaks Through Integration Barriers for Software-Defined Vehicle Development with Open S32 CoreRide Platform</a>
-              </h3>
-              <p class="metadata">Mar 28, 2024</p>
-            </div>
-          </div>
-        </div>
-
-    </div>
-    <br>
-    <ul class="list-unstyled list-inline text-center mb0">
-      <li>
-        <a class="btn btn-lg" href="?collection=Media&amp;start=0&amp;max=12&amp;language=en&amp;query=typeNews>>Press%20Release">VIEW ALL PRESS RELEASES</a>
-      </li>
-    </ul>
-</div>
-'''
+# Send a GET request to the URL
+response = requests.get("https://www.nxp.com/company/about-nxp/newsroom:NEWSROOM")
 
 # Parse the HTML content with BeautifulSoup
-soup = BeautifulSoup(html_content, 'html.parser')
+soup = BeautifulSoup(response.content, 'html.parser')
 
 # Find all divs with class 'card1-item'
 items = soup.find_all('div', class_='card1-item')
