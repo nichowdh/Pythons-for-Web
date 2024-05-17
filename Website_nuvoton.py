@@ -1,36 +1,12 @@
+
+import requests
 from bs4 import BeautifulSoup
 
-# Sample HTML content
-html_content = '''
-<div class="table">
-    <div class="table_container">
-        <div class="css_table">
-            <div class="css_tr">
-                <div class="css_td td2">Date</div>
-                <div class="css_td td3">Title</div>
-            </div>
-            <div class="css_tr">
-                <div class="css_td">2024-05-03</div>
-                <div class="css_td $">
-                    <a href="/news/news/all/TSNuvotonNews-000508/" title="&quot;Nvovoton Technology 2024 Future Innovation Summit - Focusing on AI, New Energy, and Automotive Electronics&quot; is about to begin">
-                        "Nvovoton Technology 2024 Future Innovation Summit - Focusing on AI, New Energy, and Automotive Electronics" is about to begin</a>
-                </div>
-            </div>
-            <div class="css_tr">
-                <div class="css_td">2024-05-03</div>
-                <div class="css_td $">
-                    <a href="/news/news/all/TSNuvotonNews-000506/" title="Nuvoton Technology Holds Investor Conference for the First Quarter of 2024">
-                        Nuvoton Technology Holds Investor Conference for the First Quarter of 2024</a>
-                </div>
-            </div>
-            <!-- Add other entries similarly -->
-        </div>
-    </div>
-</div>
-'''
+# Send a GET request to the URL
+response = requests.get("https://www.nuvoton.com/news/news/all/")
 
 # Parse the HTML content with BeautifulSoup
-soup = BeautifulSoup(html_content, 'html.parser')
+soup = BeautifulSoup(response.content, 'html.parser')
 
 # Find all rows with class 'css_tr'
 rows = soup.find_all('div', class_='css_tr')
