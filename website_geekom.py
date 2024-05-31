@@ -1,35 +1,36 @@
 import requests
 from bs4 import BeautifulSoup
 
-# Function to scrape the news items from the website
-def scrape_news():
-    url = 'https://community.geekompc.com/forums/official-news-and-deals.38/'
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'}
-    response = requests.get(url, headers=headers)
-    if response.status_code == 200:
-        soup = BeautifulSoup(response.content, 'html.parser')
-        # Find all news items
-        news_items = soup.find_all('div', class_='post--stacked')
-        news_list = []
-        for news_item in news_items[:5]:  # Limit to the first 10 news items
-            # Extract the news title and date
-            news_title = news_item.find('h3', class_='post__title').text.strip()
-            news_date = news_item.find('div', class_='post__meta').text.strip()
-            # Store the news title and date in a dictionary
-            news_list.append({'title': news_title, 'date': news_date})
-        return news_list
-    else:
-        print("Failed to retrieve the webpage. Status code:", response.status_code)
 
-if __name__ == "__main__":
-    # Scrape the news items and store them in an array
-    news_array = scrape_news()
-    if news_array:
-        for idx, news in enumerate(news_array, start=1):
-            print(f"News {idx}:")
-            print("Title:", news['title'])
-            print("Date:", news['date'])
-            print()
-    else:
-        print("No news found.")
+# Send a GET request to the URL
+response = requests.get("https://community.geekompc.com/forums/official-news-and-deals.38/")
+
+
+
+# Parse the HTML content with BeautifulSoup
+soup = BeautifulSoup(response.content, 'html.parser')
+
+# Find all threads
+threads = soup.find_all('div', class_='structItem')
+
+# Initialize lists to store titles and dates
+titles = []
+dates = []
+
+# Iterate through each thread to extract titles and dates
+for thread in threads:
+    # Find the title
+    title_tag = thread.find('div', class_='structItem-title')
+    if title_tag:
+        title = title_tag.find_all('a')[-1].get_text(strip=True)  # The actual title link is the last <a> tag within the title div
+        titles.append(title)
+    
+    # Find the date
+    date_tag = thread.find('li', class_='structItem-startDate').find('time')
+    if date_tag:
+        date = date_tag.get_text(strip=True)
+        dates.append(date)
+
+# Print the extracted titles and dates
+for title, date in zip(titles, dates):
+    print(f"Date: {date}, Title: {title}")
