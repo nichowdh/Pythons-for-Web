@@ -7,7 +7,6 @@ from bs4 import BeautifulSoup
 response = requests.get("https://www.makerfabs.com/blog")
 
 
-
 soup = BeautifulSoup(response.content, 'html.parser')
 
 # Find all divs with class 'post-item'
