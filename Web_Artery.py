@@ -19,6 +19,6 @@ for item in soup.find_all('div', class_='row blog-item'):
     translated_title = translator.translate(title, src='auto', dest='en').text
     entries.append({'title': translated_title, 'date': date})
 
-for entry in entries:
+for entry in entries[:3]:
     print(f"Title: {entry['title']}")
     print(f"Date: {entry['date']}\n")
