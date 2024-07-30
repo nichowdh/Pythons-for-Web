@@ -13,7 +13,7 @@ driver.get(url)
 
 try:
     # Wait until the news items are loaded
-    WebDriverWait(driver, 10).until(
+    WebDriverWait(driver, 5).until(
         EC.presence_of_all_elements_located((By.CLASS_NAME, 'style_card-frame__On5UP'))
     )
 
