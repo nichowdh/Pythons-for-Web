@@ -28,6 +28,7 @@ try:
     # Extract and print titles
     for title in titles[:3]:
         print(f"Title: {title.text.strip()}")
+        print()
         
 finally:
     # Close the browser
