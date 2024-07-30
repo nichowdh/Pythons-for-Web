@@ -15,7 +15,7 @@ def scrape_latest_news(url):
         articles = soup.find_all('article')
         
         # Iterate over each article
-        for article in articles:
+        for article in articles[:3]:
             # Extract entry title
             entry_title = article.find('h2', class_='entry-title').text.strip()
             
