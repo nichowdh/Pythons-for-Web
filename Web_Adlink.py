@@ -35,7 +35,7 @@ try:
 
     # Extract the titles and dates
     news_data = []
-    for entry in news_entries:
+    for entry in news_entries[:3]:
         title = entry.find('h3', class_='news-header-3').get_text(strip=True) if entry.find('h3', class_='news-header-3') else 'No title found'
         date = entry.find('p', class_='sub-info-date').get_text(strip=True) if entry.find('p', class_='sub-info-date') else 'No date found'
         news_data.append({'title': title, 'date': date})
