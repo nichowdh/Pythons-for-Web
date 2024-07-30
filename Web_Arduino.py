@@ -12,11 +12,11 @@ if response.status_code == 200:
     soup = BeautifulSoup(response.content, 'html.parser')
     articles = soup.find_all('article', class_='post')
     if articles:
-        for article in articles:
+        for article in articles[:3]:
             title_elem = article.find('h2', itemprop='name headline')
             if title_elem:
                 title = title_elem.text.strip()
-                print(f"Title: {title}")
+                print(f"Title: {title}\n")
             else:
                 print("Title not found for an article")
     else:
