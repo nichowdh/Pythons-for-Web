@@ -18,5 +18,5 @@ for item in soup.find_all('li', class_='grid'):
         entries.append(title)
 
 # Print the titles
-for title in entries:
-    print(f"Title: {title}")
+for title in entries[:3]:
+    print(f"Title: {title}\n")
