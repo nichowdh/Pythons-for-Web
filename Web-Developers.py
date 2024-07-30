@@ -16,7 +16,7 @@ try:
     driver.get(url)
     
     # Wait for the page to load completely (adjust wait time as needed)
-    driver.implicitly_wait(10)
+    driver.implicitly_wait(5)
     
     # Get the page source after it's fully loaded
     page_source = driver.page_source
