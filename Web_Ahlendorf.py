@@ -14,6 +14,6 @@ for article in soup.find_all('article'):
     date = article.find('div', class_='media-body').find_all('p')[-1].text.strip().split(',')[-1].strip()
     entries.append({'title': title, 'date': date})
 
-for entry in entries:
+for entry in entries[:3]:
     print(f"Title: {entry['title']}")
     print(f"Date: {entry['date']}\n")
