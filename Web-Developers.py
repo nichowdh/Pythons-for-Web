@@ -31,12 +31,12 @@ try:
         print("No entries found on the page.")
 
     # Extract title and date for each entry
-    for entry in entries:
+    for entry in entries[:3]:
         title = entry.get('displaytitle', '')
         date = entry.find('p', class_='devsite-card-date').text.strip() if entry.find('p', class_='devsite-card-date') else ''
         print(f"Title: {title}")
         print(f"Date: {date}")
-        print("---")
+        print()
 
 except Exception as e:
     print(f"An error occurred: {e}")
