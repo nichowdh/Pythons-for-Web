@@ -15,7 +15,7 @@ try:
     # Find all articles
     articles = soup.find_all('article', class_='news')
 
-    for article in articles:
+    for article in articles[:3]:
         news_title = article.find('h2', class_='news-title').text.strip()
         news_date = article.find('time', class_='news-published')['datetime']
 
