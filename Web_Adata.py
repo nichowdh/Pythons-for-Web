@@ -26,10 +26,9 @@ try:
     # Select news items based on the observed structure
     news_items = soup.select('.style_card-frame__On5UP')
 
-    # Print the number of news items found for debugging
-    print(f"Found {len(news_items)} news items.")
+    
 
-    for item in news_items:
+    for item in news_items[:3]:
         # Extract the title
         title_tag = item.select_one('.style_card-title__Elqfd')
         title = title_tag.text.strip() if title_tag else 'No title found'
@@ -46,6 +45,7 @@ try:
         date = f'{day} {month} {year}'
 
         print(f'Title: {title}, Date: {date}')
+        print()
 finally:
     # Close the WebDriver
     driver.quit()
