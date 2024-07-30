@@ -20,13 +20,13 @@ try:
     driver.get(url)
     
     # Wait for the page to fully render (adjust as necessary)
-    driver.implicitly_wait(10)  # seconds
+    driver.implicitly_wait(5)  # seconds
     
     # Find all title elements
     titles = driver.find_elements(By.CSS_SELECTOR, 'a.intLink.w-full > h2.text-3xl')
     
     # Extract and print titles
-    for title in titles:
+    for title in titles[:3]:
         print(f"Title: {title.text.strip()}")
         
 finally:
