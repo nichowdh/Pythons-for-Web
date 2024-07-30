@@ -24,7 +24,7 @@ try:
     articles = soup.find_all('article')
 
     # Iterate through each article to extract title and date
-    for article in articles:
+    for article in articles[:3]:
         # Extract title
         title_elem = article.find('h4', class_='card-title')
         title = title_elem.text.strip() if title_elem else "No title found"
