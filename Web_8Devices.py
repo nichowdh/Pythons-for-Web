@@ -23,7 +23,7 @@ if response.status_code == 200:
     # Find all the sections with the class 'single-post container'
     sections = soup.find_all('section', class_='single-post container')
 
-    for section in sections[:5]:  # Limit to the first 3 entries
+    for section in sections[:3]:  # Limit to the first 3 entries
         # Extract the title
         title_tag = section.find('h3', class_='title')
         title = title_tag.text.strip() if title_tag else 'No title found'
@@ -31,6 +31,6 @@ if response.status_code == 200:
 
     # Print the titles
     for title in titles:
-        print(f"Title: {title}")
+        print(f"Title: {title}\n")
 else:
     print(f"Error fetching the page: {response.status_code}")
