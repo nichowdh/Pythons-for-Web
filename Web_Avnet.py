@@ -41,10 +41,10 @@ try:
             entries.append((title, date))
 
     # Print the results
-    for title, date in entries:
+    for title, date in entries[:3]:
         print(f"Title: {title}")
         print(f"Date: {date}")
-        print("----------")
+        print()
 
 except Exception as e:
     print(f"An error occurred: {e}")
