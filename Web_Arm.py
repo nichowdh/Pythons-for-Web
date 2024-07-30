@@ -13,7 +13,7 @@ soup = BeautifulSoup(response.content, 'html.parser')
 cards = soup.find_all('ads-card')
 
 # Extract titles and dates
-for card in cards:
+for card in cards[:3]:
     title = card.find('h3', class_='PostAnnounce__title').get_text(strip=True)
     date = card.find('ads-breadcrumb', class_='PostAnnounce__date').get_text(strip=True)
     print(f'Title: {title}')
