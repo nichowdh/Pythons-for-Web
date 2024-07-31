@@ -12,7 +12,7 @@ soup = BeautifulSoup(response.content, 'html.parser')
 
 entries = soup.find_all('article', class_='flex')
 
-for entry in entries:
+for entry in entries[:3]:
     title = entry.find('h3').text.strip()
     date = entry.find('time')['datetime']
     print(f'Title: {title}\nDate: {date}\n')
