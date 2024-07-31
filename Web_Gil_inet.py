@@ -15,7 +15,7 @@ entries = soup.find_all('div', class_='row')
 titles = []
 
 # Loop through each entry to extract title
-for entry in entries:
+for entry in entries[:3]:
     # Find the title
     title_container = entry.find('h3', class_='post-title')
     if title_container:
@@ -26,3 +26,4 @@ for entry in entries:
 # Print the titles
 for title in titles:
     print(f"Title: {title}")
+    print()
