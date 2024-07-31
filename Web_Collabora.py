@@ -12,7 +12,7 @@ soup = BeautifulSoup(response.content, 'html.parser')
 entries = soup.find_all('div', class_='BlogAndNewsArticleTplWrapper')
 
 # Extract the first 3 entry titles and dates
-for entry in entries[:5]:
+for entry in entries[:3]:
     title_tag = entry.find('h3').find('a')
     date_tag = entry.find('p', class_='_2016datestamp').find('strong')
 
@@ -20,3 +20,4 @@ for entry in entries[:5]:
     date = date_tag.get_text(strip=True)
 
     print(f"Title: {title}, Date: {date}")
+    print()
