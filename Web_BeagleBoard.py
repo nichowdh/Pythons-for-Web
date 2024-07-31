@@ -15,7 +15,7 @@ soup = BeautifulSoup(html_content, 'html.parser')
 entries = soup.find_all('div', class_='feature-card')
 
 # Iterate over each entry to extract title, URL, and date
-for entry in entries[:5]:
+for entry in entries[:3]:
     # Extract the title
     title_element = entry.find('p', class_='card-title')
     if title_element:
@@ -25,5 +25,4 @@ for entry in entries[:5]:
 
     # Print the extracted information
     print(f"Title: {title}")
-   
     print()
