@@ -11,7 +11,7 @@ soup = BeautifulSoup(response.content, 'html.parser')
 blog_posts = soup.find_all('div', class_='blog-post')
 
 # Extract titles and dates
-for post in blog_posts:
+for post in blog_posts[:3]:
     title = post.find('h5').get_text(strip=True)
     date = post.find('aside', class_='post-meta').get_text(strip=True)
     print(f'Title: {title}')
