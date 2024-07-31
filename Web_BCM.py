@@ -22,7 +22,7 @@ try:
         entries = soup.find_all('div', class_='row g-mx-5--sm g-mb-30')
 
         # Iterate through each entry to extract title and date
-        for entry in entries:
+        for entry in entries[:3]:
             date = entry.find('p').text.strip()
             title = entry.find('h2').text.strip()
             print(f"Title: {title}\nDate: {date}\n")
