@@ -12,9 +12,9 @@ soup = BeautifulSoup(response.content, 'html.parser')
 entries = soup.find_all('div', class_='item')
 
 # Extract title and date for each entry
-for entry in entries:
+for entry in entries[:3]:
     title = entry.find('h3').text.strip()
     date = entry.find('span', class_='date').text.strip()
     print(f"Title: {title}")
     print(f"Date: {date}")
-    print("---")
+    print()
