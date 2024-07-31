@@ -10,7 +10,8 @@ soup = BeautifulSoup(response.content, 'html.parser')
 
 items = soup.select('.container .item')
 
-for item in items:
+for item in items[:3]:
     date = item.select_one('.tag-date .name').text.strip()
     title = item.select_one('h4 .title').text.strip()
     print(f"Date: {date}, Title: {title}")
+    print()
