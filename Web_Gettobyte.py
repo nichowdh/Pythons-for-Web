@@ -12,7 +12,8 @@ soup = BeautifulSoup(response.content, 'html.parser')
 entries = soup.find_all('div', class_='serv-box-2 s2')
 
 # Iterate over each entry and extract the title
-for entry in entries:
+for entry in entries[:3]:
     # Extract the title from <h5> tag
     title = entry.find('h5').text.strip()
     print("Entry Title:", title)
+    print()
