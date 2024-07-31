@@ -15,7 +15,7 @@ for entry in entries:
     # Extract all individual articles within each entry
     articles = entry.find_all('div', class_='he_h2p2hli fl')
 
-    for article in articles:
+    for article in articles[:3]:
         # Extract the date
         date = article.find('div', class_='he_h2p2htim').p.text.strip()
         # Extract the title
@@ -24,4 +24,4 @@ for entry in entries:
         # Print the extracted information
         print(f"Date: {date}")
         print(f"Title: {title}")
-        print('-' * 50)
+        print()
