@@ -13,5 +13,6 @@ for article in soup.find_all('article', class_='elementor-post'):
     if title_tag and title_tag.a:
         titles.append(title_tag.a.text.strip())
 
-for title in titles:
+for title in titles[:3]:
     print(title)
+    print()
