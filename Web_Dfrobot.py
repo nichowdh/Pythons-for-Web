@@ -13,5 +13,6 @@ soup = BeautifulSoup(response.content, 'html.parser')
 titles = [title.text for title in soup.find_all('a', class_='title')]
 
 # Print the titles
-for title in titles:
+for title in titles[:3]:
     print(title)
+    print()
