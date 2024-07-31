@@ -10,7 +10,8 @@ soup = BeautifulSoup(response.content, 'html.parser')
 
 articles = soup.select('.blog-article')
 
-for article in articles:
+for article in articles[:3]:
     title = article.select_one('.entry-title a').text.strip()
     date = article.select_one('.entry-date time').get('datetime').strip()
     print(f"Date: {date}, Title: {title}")
+    print()
