@@ -13,7 +13,7 @@ soup = BeautifulSoup(response.content, 'html.parser')
 articles = soup.find_all('article', class_='home-tile')
 
 # Loop through each article
-for article in articles:
+for article in articles[:3]:
     # Extract entry title
     entry_title_element = article.find('h2', class_='home-external-tile__header__big-title')
     entry_title = entry_title_element.text.strip() if entry_title_element else "Entry title not found"
@@ -29,5 +29,4 @@ for article in articles:
     # Print the extracted information
     print(f"Entry Title: {entry_title}")
     print(f"Date: {date}")
-    print(f"Publish Class: {publish_class}")
-    print("=" * 50)
+    print()
