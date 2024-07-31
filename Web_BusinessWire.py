@@ -14,7 +14,7 @@ items = soup.find_all('li')
 entries = []
 
 # Iterate over each list item to extract title and date
-for item in items[:5]:
+for item in items[:3]:
     title_tag = item.find('span', itemprop='headline')
     date_tag = item.find('time', itemprop='dateModified')
     
@@ -26,3 +26,4 @@ for item in items[:5]:
 # Print the extracted entries
 for title, date in entries:
     print(f"Title: {title}, Date: {date}")
+    print()
