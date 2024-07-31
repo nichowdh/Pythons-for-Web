@@ -23,7 +23,7 @@ if response.status_code == 200:
             date = date_tag.get_text(strip=True)
             print(f"Title: {title}")
             print(f"Date: {date}")
-            print('-' * 40)
+            print()
         else:
             print("Title or date not found for an entry.")
 else:
