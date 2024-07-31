@@ -15,7 +15,7 @@ titles = []
 dates = []
 
 # Iterate through each thread to extract titles and dates
-for thread in threads:
+for thread in threads[:3]:
     # Find the title
     title_tag = thread.find('div', class_='structItem-title')
     if title_tag:
@@ -31,3 +31,4 @@ for thread in threads:
 # Print the extracted titles and dates
 for title, date in zip(titles, dates):
     print(f"Date: {date}, Title: {title}")
+    print()
