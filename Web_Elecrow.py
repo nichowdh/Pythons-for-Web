@@ -17,7 +17,7 @@ if response.status_code == 200:
     posts = soup.find_all('li', class_='post-item')
 
     # Loop through each post and extract the title and date
-    for post in posts:
+    for post in posts[:3]:
         # Extract the title
         title = post.find('h3', class_='post-title').get_text(strip=True)
         titles.append(title)
