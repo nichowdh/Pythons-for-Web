@@ -173,7 +173,7 @@ def scrape_ahlendorf_news():
     response = requests.get(url)
     soup = BeautifulSoup(response.content, 'html.parser')
     entries = []
-    for article in soup.find_all('article'):
+    for article in soup.find_all('article')[:3]:
         title = article.find('h4', class_='media-heading').text.strip()
         date = article.find('div', class_='media-body').find_all('p')[-1].text.strip().split(',')[-1].strip()
         entries.append({'title': title, 'date': date})
@@ -196,7 +196,7 @@ def scrape_arm_newsroom():
     url = "https://newsroom.arm.com/news"
     response = requests.get(url)
     soup = BeautifulSoup(response.content, 'html.parser')
-    cards = soup.find_all('ads-card')
+    cards = soup.find_all('ads-card')[:3]
     entries = [{'title': card.find('h3', class_='PostAnnounce__title').get_text(strip=True),
                 'date': card.find('ads-breadcrumb', class_='PostAnnounce__date').get_text(strip=True)} for card in cards[:3]]
     return entries
@@ -207,10 +207,20 @@ def scrape_bcm_news():
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
     }
+
+    # Send a GET request with custom headers
     response = requests.get(url, headers=headers)
+
+    # Parse the HTML content with BeautifulSoup
     soup = BeautifulSoup(response.content, 'html.parser')
-    entries = [{'title': entry.find('h2').text.strip(), 'date': entry.find('p').text.strip()}
-               for entry in soup.find_all('div', class_='row g-mx-5--sm g-mb-30')[:3]]
+
+    # Extract the first 3 news entries
+    entries = []
+    for entry in soup.find_all('div', class_='row g-mx-5--sm g-mb-30')[:3]:
+        title = entry.find('h2').text.strip()
+        date = entry.find('p').text.strip()
+        entries.append({'title': title, 'date': date})
+
     return entries
 
 # Function to scrape BeagleBoard Blog
@@ -240,7 +250,8 @@ def scrape_businesswire_news():
     soup = BeautifulSoup(response.content, 'html.parser')
     entries = [{'title': item.find('span', itemprop='headline').get_text(strip=True),
                 'date': item.find('time', itemprop='dateModified').get_text(strip=True)}
-               for item in soup.find_all('li')[:3] if item.find('span', itemprop='headline') and item.find('time', itemprop='dateModified')]
+               for item in soup.find_all('li')[:3]
+               if item.find('span', itemprop='headline') and item.find('time', itemprop='dateModified')]
     return entries
 
 # Function to scrape Collabora Blog
@@ -258,7 +269,7 @@ def scrape_coral_ai_news():
     response = requests.get(url)
     soup = BeautifulSoup(response.content, 'html.parser')
     entries = []
-    for article in soup.find_all('article', class_='home-tile'):
+    for article in soup.find_all('article', class_='home-tile')[:3]:
         title_tag = article.find('h2', class_='home-external-tile__header__big-title')
         date_tag = article.find('span', class_='home-external-tile__content__date')
         if title_tag and date_tag:
@@ -287,7 +298,7 @@ def scrape_cytron_news():
     soup = BeautifulSoup(response.content, 'html.parser')
     entries = []
     blog_items = soup.find_all('div', class_='blog-grid-item')
-    for item in blog_items:
+    for item in blog_items[:3]:
         title_tag = item.find('h3').find('a')
         title = title_tag.text.strip() if title_tag else 'No title found'
         author_tag = item.find('div', class_='author').find('a')
