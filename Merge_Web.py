@@ -1,3 +1,4 @@
+import time
 import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
@@ -9,14 +10,37 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from googletrans import Translator
 
-def scrape_requests_bs4(url, headers=None):
+# Retry settings
+MAX_RETRIES = 5
+RETRY_DELAY = 5  # seconds
+
+# Utility function to check internet connection
+def is_connected():
     try:
-        response = requests.get(url, headers=headers)
-        response.raise_for_status()
+        requests.get('https://www.google.com', timeout=5)
+        return True
+    except requests.ConnectionError:
+        return False
+
+# Utility function for retry logic
+def retry_request(url, headers=None, retries=MAX_RETRIES):
+    for attempt in range(retries):
+        try:
+            response = requests.get(url, headers=headers)
+            response.raise_for_status()
+            return response
+        except requests.exceptions.RequestException as e:
+            print(f"Attempt {attempt + 1}/{retries} failed: {e}")
+            time.sleep(RETRY_DELAY)
+            if attempt == retries - 1:
+                print("Max retries reached. Exiting.")
+                return None
+
+def scrape_requests_bs4(url, headers=None):
+    response = retry_request(url, headers)
+    if response:
         return BeautifulSoup(response.content, 'html.parser')
-    except requests.exceptions.RequestException as e:
-        print(f"Error fetching content from {url}: {e}")
-        return None
+    return None
 
 def scrape_selenium_bs4(url):
     options = Options()
@@ -308,6 +332,11 @@ def scrape_cytron_news():
     return entries
 
 def main():
+    # Check internet connection before starting the scraping process
+    while not is_connected():
+        print("Internet connection not available. Retrying...")
+        time.sleep(RETRY_DELAY)
+        
     print("Scraping Arducam Blog:")
     scrape_arducam_blog()
     print("\nScraping Ambarella News:")
