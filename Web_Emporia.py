@@ -25,7 +25,7 @@ if response.status_code == 200:
 
     # Extract titles and dates
     entries = []
-    for article in articles:
+    for article in articles[:3]:
         # Extract title
         title_tag = article.find('h2', class_='premium-dual-header-first-header')
         if title_tag:
