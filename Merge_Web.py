@@ -331,6 +331,375 @@ def scrape_cytron_news():
         entries.append((title, date))
     return entries
 
+def parse_dfi_pressroom():
+    url = "https://www.dfi.com/pressroom?news=0"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    entries = soup.find_all('a', class_='item')
+
+    results = []
+    for entry in entries[:3]:
+        title_element = entry.find('h3', class_='title')
+        title = title_element.text.strip() if title_element else 'No Title Found'
+        date_element = entry.find('div', class_='date')
+        date = date_element.text.strip() if date_element else 'No Date Found'
+        results.append({'title': title, 'date': date})
+
+    return results
+
+def parse_dfrobot_blog():
+    url = "https://www.dfrobot.com/blog"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    titles = [title.text for title in soup.find_all('a', class_='title')]
+    return titles[:3]
+
+def parse_digi_press_releases():
+    url = "https://www.digi.com/company/press-releases"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    entries = soup.find_all('div', class_='item')
+
+    results = []
+    for entry in entries[:3]:
+        title = entry.find('h3').text.strip()
+        date = entry.find('span', class_='date').text.strip()
+        results.append({'title': title, 'date': date})
+    return results
+
+def parse_dusuniot_news():
+    url = "https://www.dusuniot.com/news/"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    titles = []
+    for article in soup.find_all('article', class_='elementor-post'):
+        title_tag = article.find('h3', class_='elementor-post__title')
+        if title_tag and title_tag.a:
+            titles.append(title_tag.a.text.strip())
+    return titles[:3]
+
+def parse_ecsipc_news():
+    url = "https://www.ecsipc.com/en/news"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    entries = soup.find_all('div', class_='item')
+
+    results = []
+    for entry in entries[:3]:
+        date_tag = entry.find('div', class_='tag-date').find('span', class_='name')
+        date = date_tag.get_text(strip=True) if date_tag else 'No date'
+        title_tag = entry.find('h4').find('a', class_='title')
+        title = title_tag.get_text(strip=True) if title_tag else 'No title'
+        results.append({'title': title, 'date': date})
+    return results
+
+def parse_edatec_products():
+    url = "https://www.edatec.cn/en/product/"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    articles = soup.select('.blog-article')
+
+    results = []
+    for article in articles[:3]:
+        title = article.select_one('.entry-title a').text.strip()
+        date = article.select_one('.entry-date time').get('datetime').strip()
+        results.append({'title': title, 'date': date})
+    return results
+
+def parse_edgeimpulse_blog():
+    url = "https://edgeimpulse.com/blog/"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    entries = soup.find_all('article', class_='flex')
+
+    results = []
+    for entry in entries[:3]:
+        title = entry.find('h3').text.strip()
+        time_tag = entry.find('time')
+        date = time_tag['datetime'] if time_tag and 'datetime' in time_tag.attrs else 'No Date Found'
+        results.append({'title': title, 'date': date})
+    return results
+
+
+def parse_efinix_news():
+    url = "https://www.efinixinc.com/company-news.html"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+    }
+    response = requests.get(url, headers=headers)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        entries = soup.find_all('div', class_='col')
+
+        results = []
+        for entry in entries[:3]:
+            title_tag = entry.find('h4')
+            date_tag = entry.find('span', class_='gray')
+            title = title_tag.get_text(strip=True) if title_tag else 'No Title Found'
+            date = date_tag.get_text(strip=True) if date_tag else 'No Date Found'
+            results.append({'title': title, 'date': date})
+        return results
+    else:
+        return []
+
+def parse_elecrow_news():
+    url = "https://www.elecrow.com/blog/elecrow-news"
+    response = requests.get(url)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        posts = soup.find_all('li', class_='post-item')
+
+        results = []
+        for post in posts[:3]:
+            title = post.find('h3', class_='post-title').get_text(strip=True)
+            date = post.find('span', class_='post-date').get_text(strip=True)
+            results.append({'title': title, 'date': date})
+        return results
+    else:
+        return []
+
+def parse_elegoo_blog():
+    url = "https://www.elegoo.com/pages/blog-collection#3d"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    blog_posts = soup.find_all('div', class_='blog-post')
+
+    results = []
+    for post in blog_posts[:3]:
+        title = post.find('h5').get_text(strip=True)
+        date = post.find('aside', class_='post-meta').get_text(strip=True)
+        results.append({'title': title, 'date': date})
+    return results
+
+def parse_emporia_news():
+    url = "https://www.emporiaenergy.com/blog/?e-filter-4847f41-category=news"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+        "Accept-Language": "en-US,en;q=0.5",
+    }
+    response = requests.get(url, headers=headers)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    articles = soup.find_all('div', class_='elementor-element elementor-element-2d5d436c premium-header-inline elementor-widget elementor-widget-premium-addon-dual-header')
+
+    results = []
+    for article in articles[:3]:
+        title_tag = article.find('h2', class_='premium-dual-header-first-header')
+        title = title_tag.text.strip() if title_tag else 'No Title Found'
+        date_tag = article.find('time')
+        date = date_tag.text.strip() if date_tag else 'No Date Found'
+        results.append({'title': title, 'date': date})
+    return results
+
+def parse_firefly_news():
+    url = "https://en.t-firefly.com/news.html"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    entries = soup.find_all('div', class_='news-list')
+
+    results = []
+    for entry in entries[:3]:
+        title_tag = entry.find('h4').find('a')
+        title = title_tag.get_text(strip=True) if title_tag else 'No title'
+        date_tag = entry.find('div', class_='other').find('span')
+        date = date_tag.get_text(strip=True) if date_tag else 'No date'
+        results.append({'title': title, 'date': date})
+    return results
+
+def parse_friendlyelec_forum():
+    url = "https://www.friendlyelec.com/Forum/viewforum.php?f=3"
+    response = requests.get(url)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        rows = soup.find_all('tr', class_='t-row clickable')
+
+        results = []
+        for row in rows[:3]:
+            title_tag = row.find('a', class_='topictitle')
+            title = title_tag.text.strip() if title_tag else 'No title found'
+            date_tag = row.find('small')
+            date = date_tag.text.strip() if date_tag else 'No date found'
+            results.append({'title': title, 'date': date})
+        return results
+    else:
+        return []
+
+def parse_geekom_forums():
+    url = "https://community.geekompc.com/forums/official-news-and-deals.38/"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    threads = soup.find_all('div', class_='structItem')
+
+    results = []
+    for thread in threads[:3]:
+        title_tag = thread.find('div', class_='structItem-title')
+        title = title_tag.find_all('a')[-1].get_text(strip=True) if title_tag else 'No Title Found'
+        date_tag = thread.find('time', class_='structItem-latestDate u-dt')
+        date = date_tag.get_text(strip=True) if date_tag else 'No Date Found'
+        results.append({'title': title, 'date': date})
+    return results
+
+def parse_getiot_news():
+    url = "https://getiot.tech/news/"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    articles = soup.find_all('div', class_='masonry-post')
+
+    results = []
+    for article in articles[:3]:
+        title_tag = article.find('h4')
+        title = title_tag.text.strip() if title_tag else 'No Title Found'
+        date_tag = article.find('span', class_='date')
+        date = date_tag.text.strip() if date_tag else 'No Date Found'
+        results.append({'title': title, 'date': date})
+    return results
+
+def scrape_ecsipc_news():
+    response = requests.get("https://www.ecsipc.com/en/news")
+    soup = BeautifulSoup(response.content, 'html.parser')
+    entries = soup.find_all('div', class_='item')
+    print("ECSIPC News:\n")
+    for entry in entries[:3]:
+        date_tag = entry.find('div', class_='tag-date').find('span', class_='name')
+        date = date_tag.get_text(strip=True) if date_tag else 'No date'
+        title_tag = entry.find('h4').find('a', class_='title')
+        title = title_tag.get_text(strip=True) if title_tag else 'No title'
+        print(f"Title: {title}")
+        print(f"Date: {date}\n")
+    time.sleep(2)
+
+def scrape_glinet_blog():
+    response = requests.get("https://blog.gl-inet.com/")
+    soup = BeautifulSoup(response.content, 'html.parser')
+    entries = soup.find_all('div', class_='row')
+    titles = []
+    print("GL.iNet Blog:\n")
+    for entry in entries[:3]:
+        title_container = entry.find('h3', class_='post-title')
+        if title_container:
+            title_tag = title_container.find('a')
+            title = title_tag.get_text(strip=True) if title_tag else 'No title'
+            titles.append(title)
+    for title in titles:
+        print(f"Title: {title}\n")
+    time.sleep(2)
+
+def scrape_gigadevice_news():
+    response = requests.get("https://www.gigadevice.com/about/news-and-event/news")
+    soup = BeautifulSoup(response.content, 'html.parser')
+    entries = soup.find_all('div', class_='he_h2p2hul clearfix')
+    print("GigaDevice News:\n")
+    for entry in entries[:3]:
+        articles = entry.find_all('div', class_='he_h2p2hli fl')
+        for article in articles[:3]:
+            date = article.find('div', class_='he_h2p2htim').p.text.strip()
+            title = article.find('div', class_='he_h2p2hxp').p.text.strip()
+            print(f"Date: {date}")
+            print(f"Title: {title}\n")
+    time.sleep(2)
+
+def scrape_gettobyte_blogs():
+    response = requests.get("https://gettobyte.in/semiconductor-chip-blogs/")
+    soup = BeautifulSoup(response.content, 'html.parser')
+    entries = soup.find_all('div', class_='serv-box-2 s2')
+    print("Gettobyte Blogs:\n")
+    for entry in entries[:3]:
+        title = entry.find('h5').text.strip()
+        print(f"Entry Title: {title}\n")
+    time.sleep(2)
+
+def scrape_hubitat_press_releases():
+    response = requests.get("https://hubitat.com/pages/press-releases")
+    soup = BeautifulSoup(response.content, 'html.parser')
+    entries = soup.find_all('div', class_='press-releases press__grid')
+    print("Hubitat Press Releases:\n")
+    for entry in entries[:3]:
+        paragraphs = entry.find_all('p')
+        for paragraph in paragraphs:
+            date = paragraph.find('span').text.strip() if paragraph.find('span') else ''
+            title = paragraph.find('a').text.strip() if paragraph.find('a') else ''
+            print(f"Title: {title}")
+            print(f"Date: {date}\n")
+    time.sleep(2)
+
+def scrape_industrial_shields_blog():
+    options = webdriver.ChromeOptions()
+    options.headless = True
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    url = "https://www.industrialshields.com/blog/arduino-raspberry-pi-industrial-news-industry-4-0-iot-11"
+    driver.get(url)
+    time.sleep(10)
+    html_content = driver.page_source
+    driver.quit()
+    soup = BeautifulSoup(html_content, 'html.parser')
+    articles = soup.find_all('article', class_='o_wblog_post')
+    titles = []
+    print("Industrial Shields Blog:\n")
+    for article in articles[:3]:
+        title_tag = article.find('a', class_='o_blog_post_title')
+        if title_tag:
+            title = title_tag.text.strip()
+            titles.append(title)
+    for title in titles:
+        print(title)
+    time.sleep(2)
+
+def scrape_inventia_news():
+    options = Options()
+    options.headless = True
+    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service, options=options)
+    driver.get("https://inventia.online/news/")
+    time.sleep(2)
+    soup = BeautifulSoup(driver.page_source, 'html.parser')
+    titles = []
+    print("Inventia News:\n")
+    for h4 in soup.find_all('h4'):
+        a_tag = h4.find('a')
+        if a_tag:
+            titles.append(a_tag.get_text())
+    if titles:
+        for title in titles[:3]:
+            print(title)
+    else:
+        print("No titles found")
+    driver.quit()
+    time.sleep(2)
+
+def scrape_jetway_news():
+    response = requests.get("https://jetwayipc.com/jetwaynews/?lang=en")
+    soup = BeautifulSoup(response.content, 'html.parser')
+    post_items = soup.find_all('div', class_='post-item')
+    print("Jetway News:\n")
+    titles = []
+    for item in post_items[:3]:
+        title = item.find('h5', class_='post-title').text.strip()
+        titles.append(title)
+    for title in titles:
+        print(f"Title: {title}\n")
+    time.sleep(2)
+
+def scrape_lenovo_press_releases():
+    response = requests.get("https://news.lenovo.com/pressroom/press-releases/")
+    soup = BeautifulSoup(response.content, 'html.parser')
+    entries = soup.find_all('div', class_='card card-wide card-release')
+    print("Lenovo Press Releases:\n")
+    for entry in entries[:3]:
+        date = entry.find('small', class_='card-date card-list-date').text.strip()
+        title = entry.find('h3', class_='card-title card-list-title').a.text.strip()
+        print(f"Title: {title}")
+        print(f"Date: {date}\n")
+    time.sleep(2)
+
+def scrape_luckfox_products():
+    response = requests.get("https://www.luckfox.com/index.php?route=product/catalog")
+    soup = BeautifulSoup(response.content, 'html.parser')
+    title = soup.find('div', class_='name').a.get_text(strip=True)
+    price = soup.find('span', class_='price-normal').get_text(strip=True)
+    print("LuckFox Products:\n")
+    print(f"Title: {title}")
+    print(f"Price: {price}\n")
+    time.sleep(2)
+
 def main():
     # Check internet connection before starting the scraping process
     while not is_connected():
@@ -404,6 +773,41 @@ def main():
     print("Cytron News:")
     for entry in scrape_cytron_news():
         print(f"Title: {entry[0]}\nDate: {entry[1]}\n")
+        
+    all_results = {
+        "DFI Pressroom": parse_dfi_pressroom(),
+        "DFRobot Blog": parse_dfrobot_blog(),
+        "Digi Press Releases": parse_digi_press_releases(),
+        "DusunIoT News": parse_dusuniot_news(),
+        "ECSIPC News": parse_ecsipc_news(),
+        "Edatec Products": parse_edatec_products(),
+        "EdgeImpulse Blog": parse_edgeimpulse_blog(),
+        "Efinix News": parse_efinix_news(),
+        "Elecrow News": parse_elecrow_news(),
+        "Elegoo Blog": parse_elegoo_blog(),
+        "Emporia News": parse_emporia_news(),
+        "Firefly News": parse_firefly_news(),
+        "FriendlyELEC Forum": parse_friendlyelec_forum(),
+        "GEEKOM Forums": parse_geekom_forums(),
+        "GetIoT News": parse_getiot_news()
+    }
+
+    for site, results in all_results.items():
+        print(f"\nResults from {site}:")
+        for result in results:
+            print(result)
+        time.sleep(2)
+        
+    scrape_ecsipc_news()
+    scrape_glinet_blog()
+    scrape_gigadevice_news()
+    scrape_gettobyte_blogs()
+    scrape_hubitat_press_releases()
+    scrape_industrial_shields_blog()
+    scrape_inventia_news()
+    scrape_jetway_news()
+    scrape_lenovo_press_releases()
+    scrape_luckfox_products()
 
 if __name__ == "__main__":
     main()
