@@ -14,6 +14,7 @@ from googletrans import Translator
 MAX_RETRIES = 5
 RETRY_DELAY = 5  # seconds
 
+
 # Utility function to check internet connection
 def is_connected():
     try:
@@ -21,6 +22,7 @@ def is_connected():
         return True
     except requests.ConnectionError:
         return False
+
 
 # Utility function for retry logic
 def retry_request(url, headers=None, retries=MAX_RETRIES):
@@ -36,11 +38,13 @@ def retry_request(url, headers=None, retries=MAX_RETRIES):
                 print("Max retries reached. Exiting.")
                 return None
 
+
 def scrape_requests_bs4(url, headers=None):
     response = retry_request(url, headers)
     if response:
         return BeautifulSoup(response.content, 'html.parser')
     return None
+
 
 def scrape_selenium_bs4(url):
     options = Options()
@@ -57,6 +61,7 @@ def scrape_selenium_bs4(url):
     finally:
         driver.quit()
 
+
 def scrape_arducam_blog():
     url = "https://www.arducam.com/blog/"
     soup = scrape_requests_bs4(url)
@@ -66,6 +71,7 @@ def scrape_arducam_blog():
             title = article.find('h2', class_='entry-title').text.strip()
             date = article.find('span', class_='published').text.strip()
             print(f"Arducam Blog - Title: {title}, Date: {date}\n")
+
 
 def scrape_ambarella_news():
     url = "https://www.ambarella.com/news-events/"
@@ -80,6 +86,7 @@ def scrape_ambarella_news():
             date = article.find('time', class_='news-published')['datetime']
             print(f"Ambarella News - Title: {title}, Date: {date}\n")
 
+
 def scrape_android_developer_news():
     url = "https://developer.android.com/news"
     soup = scrape_selenium_bs4(url)
@@ -87,8 +94,10 @@ def scrape_android_developer_news():
         entries = soup.find_all('div', class_='devsite-card-wrapper')
         for entry in entries[:3]:
             title = entry.get('displaytitle', 'No title found')
-            date = entry.find('p', class_='devsite-card-date').text.strip() if entry.find('p', class_='devsite-card-date') else 'No date found'
+            date = entry.find('p', class_='devsite-card-date').text.strip() if entry.find('p',
+                                                                                          class_='devsite-card-date') else 'No date found'
             print(f"Android Developer News - Title: {title}, Date: {date}\n")
+
 
 def scrape_semtech_news():
     url = "https://www.semtech.com/company/news-and-media"
@@ -96,9 +105,13 @@ def scrape_semtech_news():
     if soup:
         cards = soup.find_all('div', class_='col-12 col-md-4 col-match-height')
         for card in cards[:3]:
-            title = card.find('p', class_='h5 text-green pt-2 text-start').find('a').text.strip() if card.find('p', class_='h5 text-green pt-2 text-start').find('a') else 'No title found'
-            date = card.find('span', class_='entry-meta').text.strip() if card.find('span', class_='entry-meta') else 'No date found'
+            title = card.find('p', class_='h5 text-green pt-2 text-start').find('a').text.strip() if card.find('p',
+                                                                                                               class_='h5 text-green pt-2 text-start').find(
+                'a') else 'No title found'
+            date = card.find('span', class_='entry-meta').text.strip() if card.find('span',
+                                                                                    class_='entry-meta') else 'No date found'
             print(f"Semtech News - Title: {title}, Date: {date}\n")
+
 
 def scrape_u_blox_news():
     url = "https://www.u-blox.com/en/newsroom"
@@ -107,6 +120,7 @@ def scrape_u_blox_news():
         titles = soup.find_all('a', class_='intLink w-full > h2.text-3xl')
         for title in titles[:3]:
             print(f"u-blox News - Title: {title.text.strip()}\n")
+
 
 def scrape_8_devices_news():
     url = "https://www.8devices.com/news"
@@ -117,8 +131,10 @@ def scrape_8_devices_news():
     if soup:
         sections = soup.find_all('section', class_='single-post container')
         for section in sections[:3]:
-            title = section.find('h3', class_='title').text.strip() if section.find('h3', class_='title') else 'No title found'
+            title = section.find('h3', class_='title').text.strip() if section.find('h3',
+                                                                                    class_='title') else 'No title found'
             print(f"8 Devices News - Title: {title}\n")
+
 
 def scrape_aaeon_news():
     url = "https://www.aaeon.com/en/nc/product-news/"
@@ -127,8 +143,10 @@ def scrape_aaeon_news():
         entries = soup.find_all('div', class_='cf iLB')
         for entry in entries[:3]:
             title = entry.find('h3').text.strip() if entry.find('h3') else 'No title found'
-            date = entry.find('span', class_='date').text.strip() if entry.find('span', class_='date') else 'No date found'
+            date = entry.find('span', class_='date').text.strip() if entry.find('span',
+                                                                                class_='date') else 'No date found'
             print(f"AAEON News - Title: {title}, Date: {date}\n")
+
 
 def scrape_adata_news():
     url = "https://www.adata.com/in/news/"
@@ -136,12 +154,17 @@ def scrape_adata_news():
     if soup:
         news_items = soup.select('.style_card-frame__On5UP')
         for item in news_items[:3]:
-            title = item.select_one('.style_card-title__Elqfd').text.strip() if item.select_one('.style_card-title__Elqfd') else 'No title found'
-            day = item.select_one('.style_card-date-frame__1XNWi').text.strip() if item.select_one('.style_card-date-frame__1XNWi') else 'No day found'
-            month = item.select_one('.style_card-date-year__4VAtT p:nth-of-type(2)').text.strip() if item.select_one('.style_card-date-year__4VAtT p:nth-of-type(2)') else 'No month found'
-            year = item.select_one('.style_card-date-year__4VAtT p:nth-of-type(1)').text.strip() if item.select_one('.style_card-date-year__4VAtT p:nth-of-type(1)') else 'No year found'
+            title = item.select_one('.style_card-title__Elqfd').text.strip() if item.select_one(
+                '.style_card-title__Elqfd') else 'No title found'
+            day = item.select_one('.style_card-date-frame__1XNWi').text.strip() if item.select_one(
+                '.style_card-date-frame__1XNWi') else 'No day found'
+            month = item.select_one('.style_card-date-year__4VAtT p:nth-of-type(2)').text.strip() if item.select_one(
+                '.style_card-date-year__4VAtT p:nth-of-type(2)') else 'No month found'
+            year = item.select_one('.style_card-date-year__4VAtT p:nth-of-type(1)').text.strip() if item.select_one(
+                '.style_card-date-year__4VAtT p:nth-of-type(1)') else 'No year found'
             date = f'{day} {month} {year}'
             print(f"ADATA News - Title: {title}, Date: {date}\n")
+
 
 def scrape_adlinktech_news():
     url = "https://www.adlinktech.com/en/news"
@@ -149,9 +172,12 @@ def scrape_adlinktech_news():
     if soup:
         news_entries = soup.find_all('a', class_='latest-news')
         for entry in news_entries[:3]:
-            title = entry.find('h3', class_='news-header-3').get_text(strip=True) if entry.find('h3', class_='news-header-3') else 'No title found'
-            date = entry.find('p', class_='sub-info-date').get_text(strip=True) if entry.find('p', class_='sub-info-date') else 'No date found'
+            title = entry.find('h3', class_='news-header-3').get_text(strip=True) if entry.find('h3',
+                                                                                                class_='news-header-3') else 'No title found'
+            date = entry.find('p', class_='sub-info-date').get_text(strip=True) if entry.find('p',
+                                                                                              class_='sub-info-date') else 'No date found'
             print(f"ADLINK News - Title: {title}, Date: {date}\n")
+
 
 def scrape_arterychip_news():
     url = "https://www.arterychip.com/en/news/index.jsp"
@@ -176,9 +202,11 @@ def scrape_atreyo_news():
     url = "https://atreyo.in/index.php/en/resources/blog"
     soup = scrape_requests_bs4(url)
     if soup:
-        entries = [item.find('h4', class_='blog-title-views').find('span').get_text(strip=True) for item in soup.find_all('li', class_='grid')]
+        entries = [item.find('h4', class_='blog-title-views').find('span').get_text(strip=True) for item in
+                   soup.find_all('li', class_='grid')]
         for title in entries[:3]:
             print(f"Atreyo News - Title: {title}\n")
+
 
 def scrape_avnet_news():
     url = "https://news.avnet.com/overview/default.aspx"
@@ -191,6 +219,8 @@ def scrape_avnet_news():
             title = headline_div.get_text(strip=True) if headline_div else 'No title found'
             date = date_span.get_text(strip=True) if date_span else 'No date found'
             print(f"Avnet News - Title: {title}, Date: {date}\n")
+
+
 # Function to scrape Ahlendorf News
 def scrape_ahlendorf_news():
     url = "https://ahlendorf-news.com/en/overview/"
@@ -202,6 +232,7 @@ def scrape_ahlendorf_news():
         date = article.find('div', class_='media-body').find_all('p')[-1].text.strip().split(',')[-1].strip()
         entries.append({'title': title, 'date': date})
     return entries
+
 
 # Function to scrape Arduino Blog
 def scrape_arduino_blog():
@@ -215,6 +246,7 @@ def scrape_arduino_blog():
     entries = [{'title': article.find('h2', itemprop='name headline').text.strip()} for article in articles[:3]]
     return entries
 
+
 # Function to scrape ARM Newsroom
 def scrape_arm_newsroom():
     url = "https://newsroom.arm.com/news"
@@ -222,8 +254,10 @@ def scrape_arm_newsroom():
     soup = BeautifulSoup(response.content, 'html.parser')
     cards = soup.find_all('ads-card')[:3]
     entries = [{'title': card.find('h3', class_='PostAnnounce__title').get_text(strip=True),
-                'date': card.find('ads-breadcrumb', class_='PostAnnounce__date').get_text(strip=True)} for card in cards[:3]]
+                'date': card.find('ads-breadcrumb', class_='PostAnnounce__date').get_text(strip=True)} for card in
+               cards[:3]]
     return entries
+
 
 # Function to scrape BCM News
 def scrape_bcm_news():
@@ -247,25 +281,32 @@ def scrape_bcm_news():
 
     return entries
 
+
 # Function to scrape BeagleBoard Blog
 def scrape_beagleboard_blog():
     url = "https://www.beagleboard.org/blog/"
     response = requests.get(url)
     soup = BeautifulSoup(response.content, 'html.parser')
-    entries = [{'title': entry.find('p', class_='card-title').text.strip() if entry.find('p', class_='card-title') else "No title found"}
+    entries = [{'title': entry.find('p', class_='card-title').text.strip() if entry.find('p',
+                                                                                         class_='card-title') else "No title found"}
                for entry in soup.find_all('div', class_='feature-card')[:3]]
     return entries
+
 
 # Function to scrape Bluetooth Events
 def scrape_bluetooth_events():
     url = "https://www.bluetooth.com/events/"
-    headers = {"User-Agent": "Your User-Agent String", "Referer": "https://www.yourwebsite.com", "Accept-Language": "en-US,en;q=0.9"}
+    headers = {"User-Agent": "Your User-Agent String", "Referer": "https://www.yourwebsite.com",
+               "Accept-Language": "en-US,en;q=0.9"}
     response = requests.get(url, headers=headers)
     soup = BeautifulSoup(response.content, 'html.parser')
-    entries = [{'title': article.find('h4', class_='card-title').text.strip() if article.find('h4', class_='card-title') else "No title found",
-                'date': article.find('li', class_='date').text.strip() if article.find('li', class_='date') else "No date found"}
+    entries = [{'title': article.find('h4', class_='card-title').text.strip() if article.find('h4',
+                                                                                              class_='card-title') else "No title found",
+                'date': article.find('li', class_='date').text.strip() if article.find('li',
+                                                                                       class_='date') else "No date found"}
                for article in soup.find_all('article')[:3]]
     return entries
+
 
 # Function to scrape BusinessWire News
 def scrape_businesswire_news():
@@ -278,14 +319,17 @@ def scrape_businesswire_news():
                if item.find('span', itemprop='headline') and item.find('time', itemprop='dateModified')]
     return entries
 
+
 # Function to scrape Collabora Blog
 def scrape_collabora_blog():
     url = "https://www.collabora.com/news-and-blog/"
     response = requests.get(url)
     soup = BeautifulSoup(response.content, 'html.parser')
-    entries = [{'title': entry.find('h3').find('a').get_text(strip=True), 'date': entry.find('p', class_='_2016datestamp').find('strong').get_text(strip=True)}
+    entries = [{'title': entry.find('h3').find('a').get_text(strip=True),
+                'date': entry.find('p', class_='_2016datestamp').find('strong').get_text(strip=True)}
                for entry in soup.find_all('div', class_='BlogAndNewsArticleTplWrapper')[:3]]
     return entries
+
 
 # Function to scrape Coral AI News
 def scrape_coral_ai_news():
@@ -302,6 +346,7 @@ def scrape_coral_ai_news():
             entries.append({'title': title, 'date': date})
     return entries
 
+
 # Function to scrape CTL Insights Blog
 def scrape_ctl_insights_blog():
     url = "https://ctl.net/blogs/insights"
@@ -311,6 +356,7 @@ def scrape_ctl_insights_blog():
                  'date': item.find('time', class_='article__meta-item article__date').get_text(strip=True)}
                 for item in soup.find_all('div', class_='article-item')[:3]]
     return articles
+
 
 # Function to scrape Cytron News
 def scrape_cytron_news():
@@ -331,6 +377,7 @@ def scrape_cytron_news():
         entries.append((title, date))
     return entries
 
+
 def parse_dfi_pressroom():
     url = "https://www.dfi.com/pressroom?news=0"
     response = requests.get(url)
@@ -347,12 +394,14 @@ def parse_dfi_pressroom():
 
     return results
 
+
 def parse_dfrobot_blog():
     url = "https://www.dfrobot.com/blog"
     response = requests.get(url)
     soup = BeautifulSoup(response.content, 'html.parser')
     titles = [title.text for title in soup.find_all('a', class_='title')]
     return titles[:3]
+
 
 def parse_digi_press_releases():
     url = "https://www.digi.com/company/press-releases"
@@ -367,6 +416,7 @@ def parse_digi_press_releases():
         results.append({'title': title, 'date': date})
     return results
 
+
 def parse_dusuniot_news():
     url = "https://www.dusuniot.com/news/"
     response = requests.get(url)
@@ -377,6 +427,7 @@ def parse_dusuniot_news():
         if title_tag and title_tag.a:
             titles.append(title_tag.a.text.strip())
     return titles[:3]
+
 
 def parse_ecsipc_news():
     url = "https://www.ecsipc.com/en/news"
@@ -393,6 +444,7 @@ def parse_ecsipc_news():
         results.append({'title': title, 'date': date})
     return results
 
+
 def parse_edatec_products():
     url = "https://www.edatec.cn/en/product/"
     response = requests.get(url)
@@ -405,6 +457,7 @@ def parse_edatec_products():
         date = article.select_one('.entry-date time').get('datetime').strip()
         results.append({'title': title, 'date': date})
     return results
+
 
 def parse_edgeimpulse_blog():
     url = "https://edgeimpulse.com/blog/"
@@ -442,6 +495,7 @@ def parse_efinix_news():
     else:
         return []
 
+
 def parse_elecrow_news():
     url = "https://www.elecrow.com/blog/elecrow-news"
     response = requests.get(url)
@@ -458,6 +512,7 @@ def parse_elecrow_news():
     else:
         return []
 
+
 def parse_elegoo_blog():
     url = "https://www.elegoo.com/pages/blog-collection#3d"
     response = requests.get(url)
@@ -471,6 +526,7 @@ def parse_elegoo_blog():
         results.append({'title': title, 'date': date})
     return results
 
+
 def parse_emporia_news():
     url = "https://www.emporiaenergy.com/blog/?e-filter-4847f41-category=news"
     headers = {
@@ -479,7 +535,8 @@ def parse_emporia_news():
     }
     response = requests.get(url, headers=headers)
     soup = BeautifulSoup(response.content, 'html.parser')
-    articles = soup.find_all('div', class_='elementor-element elementor-element-2d5d436c premium-header-inline elementor-widget elementor-widget-premium-addon-dual-header')
+    articles = soup.find_all('div',
+                             class_='elementor-element elementor-element-2d5d436c premium-header-inline elementor-widget elementor-widget-premium-addon-dual-header')
 
     results = []
     for article in articles[:3]:
@@ -489,6 +546,7 @@ def parse_emporia_news():
         date = date_tag.text.strip() if date_tag else 'No Date Found'
         results.append({'title': title, 'date': date})
     return results
+
 
 def parse_firefly_news():
     url = "https://en.t-firefly.com/news.html"
@@ -504,6 +562,7 @@ def parse_firefly_news():
         date = date_tag.get_text(strip=True) if date_tag else 'No date'
         results.append({'title': title, 'date': date})
     return results
+
 
 def parse_friendlyelec_forum():
     url = "https://www.friendlyelec.com/Forum/viewforum.php?f=3"
@@ -523,6 +582,7 @@ def parse_friendlyelec_forum():
     else:
         return []
 
+
 def parse_geekom_forums():
     url = "https://community.geekompc.com/forums/official-news-and-deals.38/"
     response = requests.get(url)
@@ -537,6 +597,7 @@ def parse_geekom_forums():
         date = date_tag.get_text(strip=True) if date_tag else 'No Date Found'
         results.append({'title': title, 'date': date})
     return results
+
 
 def parse_getiot_news():
     url = "https://getiot.tech/news/"
@@ -553,6 +614,7 @@ def parse_getiot_news():
         results.append({'title': title, 'date': date})
     return results
 
+
 def scrape_ecsipc_news():
     response = requests.get("https://www.ecsipc.com/en/news")
     soup = BeautifulSoup(response.content, 'html.parser')
@@ -566,6 +628,7 @@ def scrape_ecsipc_news():
         print(f"Title: {title}")
         print(f"Date: {date}\n")
     time.sleep(2)
+
 
 def scrape_glinet_blog():
     response = requests.get("https://blog.gl-inet.com/")
@@ -583,6 +646,7 @@ def scrape_glinet_blog():
         print(f"Title: {title}\n")
     time.sleep(2)
 
+
 def scrape_gigadevice_news():
     response = requests.get("https://www.gigadevice.com/about/news-and-event/news")
     soup = BeautifulSoup(response.content, 'html.parser')
@@ -597,6 +661,7 @@ def scrape_gigadevice_news():
             print(f"Title: {title}\n")
     time.sleep(2)
 
+
 def scrape_gettobyte_blogs():
     response = requests.get("https://gettobyte.in/semiconductor-chip-blogs/")
     soup = BeautifulSoup(response.content, 'html.parser')
@@ -606,6 +671,7 @@ def scrape_gettobyte_blogs():
         title = entry.find('h5').text.strip()
         print(f"Entry Title: {title}\n")
     time.sleep(2)
+
 
 def scrape_hubitat_press_releases():
     response = requests.get("https://hubitat.com/pages/press-releases")
@@ -620,6 +686,7 @@ def scrape_hubitat_press_releases():
             print(f"Title: {title}")
             print(f"Date: {date}\n")
     time.sleep(2)
+
 
 def scrape_industrial_shields_blog():
     options = webdriver.ChromeOptions()
@@ -643,6 +710,7 @@ def scrape_industrial_shields_blog():
         print(title)
     time.sleep(2)
 
+
 def scrape_inventia_news():
     options = Options()
     options.headless = True
@@ -665,6 +733,7 @@ def scrape_inventia_news():
     driver.quit()
     time.sleep(2)
 
+
 def scrape_jetway_news():
     response = requests.get("https://jetwayipc.com/jetwaynews/?lang=en")
     soup = BeautifulSoup(response.content, 'html.parser')
@@ -678,6 +747,7 @@ def scrape_jetway_news():
         print(f"Title: {title}\n")
     time.sleep(2)
 
+
 def scrape_lenovo_press_releases():
     response = requests.get("https://news.lenovo.com/pressroom/press-releases/")
     soup = BeautifulSoup(response.content, 'html.parser')
@@ -690,6 +760,7 @@ def scrape_lenovo_press_releases():
         print(f"Date: {date}\n")
     time.sleep(2)
 
+
 def scrape_luckfox_products():
     response = requests.get("https://www.luckfox.com/index.php?route=product/catalog")
     soup = BeautifulSoup(response.content, 'html.parser')
@@ -700,12 +771,419 @@ def scrape_luckfox_products():
     print(f"Price: {price}\n")
     time.sleep(2)
 
+def fetch_m5stack():
+    response = requests.get("https://m5stack.com/explore?page=1")
+    soup = BeautifulSoup(response.content, 'html.parser')
+    news_cards = soup.find_all('div', class_='news-card')
+
+    entries = []
+    for card in news_cards[:3]:
+        title_tag = card.find('div', class_='news-card-title').find('a')
+        date_tag = card.find('div', class_='news-card-date')
+        title = title_tag.text.strip() if title_tag else 'No title'
+        date = date_tag.text.strip() if date_tag else 'No date'
+        entries.append({'title': title, 'date': date})
+
+    print("M5Stack News:")
+    for entry in entries:
+        print(f"Title: {entry['title']}, Date: {entry['date']}")
+    print("\n")
+    time.sleep(2)
+
+
+def fetch_makerfabs():
+    response = requests.get("https://www.makerfabs.com/blog")
+    soup = BeautifulSoup(response.content, 'html.parser')
+    items = soup.find_all('div', class_='post-item')
+
+    print("Makerfabs Blog:")
+    for item in items[:3]:
+        title_tag = item.find('span', class_='post-title')
+        date_tag = item.find('div', class_='post-posed-date')
+        title = title_tag.get_text(strip=True) if title_tag else 'No title'
+        date = date_tag.get_text(strip=True) if date_tag else 'No date'
+        print(f"Date: {date}, Title: {title}")
+    print("\n")
+    time.sleep(2)
+
+
+def fetch_mediatek():
+    url = "https://corp.mediatek.com/news-events/press-releases"
+    response = requests.get(url, verify=False)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    articles = soup.find_all('article', class_='entry-content block')
+
+    print("MediaTek Press Releases:")
+    for article in articles[:3]:
+        title_tag = article.find('h3')
+        date_tag = article.find('span', class_='date')
+        title = title_tag.get_text(strip=True) if title_tag else 'No title'
+        date = date_tag.get_text(strip=True) if date_tag else 'No date'
+        print(f'Title: {title}')
+        print(f'Date: {date}')
+    print("\n")
+    time.sleep(2)
+
+
+def fetch_microchip():
+    options = Options()
+    options.headless = True
+    driver = webdriver.Chrome(options=options)
+    driver.get("https://www.microchip.com/en-us/about/news-releases")
+
+    soup = BeautifulSoup(driver.page_source, 'html.parser')
+    entries = []
+
+    for row in soup.find_all('tr', role='row')[:3]:
+        try:
+            title_tag = row.find('td', class_='title-column dont_sort').find('a')
+            date_tag = row.find_all('td')[1]
+            title = title_tag.get_text(strip=True) if title_tag else 'No title'
+            date = date_tag.get_text(strip=True) if date_tag else 'No date'
+            entries.append((title, date))
+        except (AttributeError, IndexError):
+            continue
+
+    print("Microchip News Releases:")
+    for title, date in entries:
+        print(f"Title: {title}\nDate: {date}\n")
+    print("\n")
+    driver.quit()
+    time.sleep(2)
+
+
+def fetch_minixforum():
+    response = requests.get("https://theminixforum.com/index.php?forums/news-announcements.2/")
+    soup = BeautifulSoup(response.content, 'html.parser')
+    struct_items = soup.find_all('div', class_='structItem')
+
+    print("Minix Forum News:")
+    for item in struct_items[:3]:
+        title_tag = item.find('div', class_='structItem-title').find('a')
+        title = title_tag.text.strip() if title_tag else 'No title'
+        date_tag = item.find('li', class_='structItem-startDate').find('time')
+        date = date_tag['datetime'] if date_tag else 'No date'
+        print(f"Title: {title}, Date: {date}")
+    print("\n")
+    time.sleep(2)
+
+
+def fetch_myirtech():
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    }
+    response = requests.get("https://www.myirtech.com/news.asp", headers=headers)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    rows = soup.find_all('tr')
+
+    print("MYIR Tech News:")
+    for row in rows[:3]:
+        title_tag = row.find('a', title=True)
+        date_tag = row.find('td', width="10%")
+        if title_tag and date_tag:
+            title = title_tag.get('title', '').strip()
+            date = date_tag.get_text(strip=True)
+            print(f"Title: {title}, Date: {date}")
+    print("\n")
+    time.sleep(2)
+
+
+def fetch_nxp():
+    response = requests.get("https://www.nxp.com/company/about-nxp/newsroom:NEWSROOM")
+    soup = BeautifulSoup(response.content, 'html.parser')
+    entries = soup.find_all('div', class_='card1-item')
+
+    print("NXP News:")
+    for entry in entries[:3]:
+        title = entry.find('h3', class_='card1-title').text.strip() if entry.find('h3') else 'No title'
+        date = entry.find('p', class_='metadata').text.strip() if entry.find('p') else 'No date'
+        print(f"Title: {title}\nDate: {date}\n")
+    print("\n")
+    time.sleep(2)
+
+
+def fetch_norvi():
+    response = requests.get("https://norvi.lk/blog/")
+    soup = BeautifulSoup(response.content, 'html.parser')
+    articles = soup.find_all('article')
+
+    print("NORVI Blog:")
+    for article in articles[:3]:
+        title_tag = article.find('h3', class_='elementor-post__title').find('a')
+        date_tag = article.find('span', class_='elementor-post-date')
+        title = title_tag.get_text(strip=True) if title_tag else 'No title'
+        date = date_tag.get_text(strip=True) if date_tag else 'No date'
+        print(f"Title: {title}, Date: {date}")
+    print("\n")
+    time.sleep(2)
+
+
+def fetch_olimex():
+    # For News
+    response = requests.get("https://www.olimex.com/")
+    soup = BeautifulSoup(response.content, 'html.parser')
+    entries = soup.find_all('div', class_='news')
+
+    print("Olimex News:")
+    for index, entry in enumerate(entries[:3], start=1):
+        title_tag = entry.find('h2')
+        date_tag = entry.find('div', class_='details').find('b')
+        title = title_tag.get_text(strip=True) if title_tag else 'No title'
+        date = date_tag.get_text(strip=True) if date_tag else 'No date'
+        print(f"{index}. Title: {title}")
+        print(f"   Date: {date}\n")
+
+    # For Products
+    response1 = requests.get("https://www.olimex.com/Products/")
+    soup = BeautifulSoup(response1.content, 'html.parser')
+    entries = soup.find_all('div', class_='pricing left')
+
+    print("Olimex Products:")
+    for index, entry in enumerate(entries[:3], start=1):
+        title_tag = entry.find('p')
+        price_tag = entry.find('div', class_='pricing default')
+        title = title_tag.get_text(strip=True) if title_tag else 'No title'
+        price = price_tag.get_text(strip=True) if price_tag else 'Price not found'
+        print(f"{index}. Title: {title}")
+        print(f"   Price: {price}\n")
+    print("\n")
+    time.sleep(2)
+
+
+def fetch_onsemi():
+    response = requests.get("https://www.onsemi.com/company/news-media/in-the-news")
+    soup = BeautifulSoup(response.content, 'html.parser')
+    entries = soup.find_all('div', class_='card')
+
+    print("Onsemi News:")
+    for entry in entries[:3]:
+        date_tag = entry.find('p').find('span')
+        title_tag = entry.find('h6').find('a')
+        date = date_tag.text if date_tag else 'No date'
+        title = title_tag.text if title_tag else 'No title'
+        print(f"Title: {title}\nDate: {date}\n")
+    print("\n")
+    time.sleep(2)
+
+
+def fetch_orbbec():
+    url = "https://shop.orbbec3d.com/shop"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+    }
+    response = requests.get(url, headers=headers)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    items = soup.find_all('div', class_='facets-items-collection-view-cell-span3')
+
+    print("Orbbec Products:")
+    for item in items[:3]:
+        title_element = item.find('span', itemprop='name')
+        price_element = item.find('span', class_='product-views-price-lead')
+        title = title_element.text.strip() if title_element else "Title not found"
+        price = price_element.text.strip() if price_element else "Price not found"
+        print(f"Title: {title}")
+        print(f"Price: {price}\n")
+    print("\n")
+    time.sleep(2)
+
+
+def fetch_picmg():
+    print("Fetching PICMG Newsletter Archive...\n")
+    url = "https://www.picmg.org/newsletter-archive/"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+        "Accept-Language": "en-US,en;q=0.5",
+        "Accept-Encoding": "gzip, deflate",
+        "Referer": "https://www.google.com",
+        "DNT": "1",
+        "Connection": "keep-alive",
+        "Upgrade-Insecure-Requests": "1"
+    }
+    response = requests.get(url, headers=headers)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    entries = soup.select('.entry-content p')
+
+    for entry in entries[:3]:
+        a_tag = entry.find('a')
+        if a_tag:
+            title_date = a_tag.text
+            if ' – ' in title_date:
+                title, date = title_date.split(' – ', 1)
+            else:
+                title, date = title_date, 'No date found'
+            print(f"Title: {title}\nDate: {date}\n")
+        else:
+            print("No <a> tag found in this entry.\n")
+            time.sleep(2)
+
+
+def fetch_portwell():
+    print("Fetching Portwell Product News...\n")
+    url = "https://portwell.com/productnews.php"
+    response = requests.get(url, verify=False)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    rows = soup.find_all('tr')
+
+    for row in rows[:3]:
+        title_tag = row.find('a', class_='pr-title')
+        title = title_tag.text.strip() if title_tag else 'No title found'
+        date_tag = row.find('small')
+        date = date_tag.text.strip() if date_tag else 'No date found'
+        print(f"Title: {title}\nDate: {date}\n")
+        time.sleep(2)
+
+
+def fetch_qualcomm():
+    print("Fetching Qualcomm News Releases...\n")
+    driver = webdriver.Chrome()
+    url = "https://www.qualcomm.com/news/releases"
+    driver.get(url)
+    time.sleep(5)
+    page_source = driver.page_source
+    soup = BeautifulSoup(page_source, 'html.parser')
+    cards = soup.find_all('div', class_='VerticalBlogCard_container__2fwPS')
+
+    for card in cards[:3]:
+        title_tag = card.find('a', class_='VerticalBlogCard_title__GUcB5')
+        title = title_tag.get_text(strip=True) if title_tag else "No Title"
+        date_tag = card.find('div', class_='VerticalBlogCard_metaContainer__irnWk')
+        date = date_tag.find('span').get_text(strip=True) if date_tag else "No Date"
+        print(f"Title: {title}\nDate: {date}\n")
+
+    driver.quit()
+    time.sleep(2)
+
+
+def fetch_radxa():
+    print("Fetching Radxa News...\n")
+    url = "https://radxa.com/news/"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    news_items = soup.select('ul.news_TIAz > li')
+
+    for item in news_items[:3]:
+        title_tag = item.select_one('div.new_t_gfEZ > h2')
+        title = title_tag.text.strip() if title_tag else 'No title found'
+        date_tag = item.select_one('p.time_soVr')
+        date = date_tag.text.strip() if date_tag else 'No date found'
+        print(f"Title: {title}\nDate: {date}\n")
+        time.sleep(2)
+
+
+def fetch_revolutionpi():
+    print("Fetching Revolution Pi Blog...\n")
+    url = "https://revolutionpi.com/en/blog/"
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    }
+    response = requests.get(url, headers=headers)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    articles = soup.find_all('article')
+
+    for article in articles[:3]:
+        title_element = article.find('h2', class_='entry-title')
+        title = title_element.text.strip() if title_element else 'No Title Found'
+        date_element = article.find('time', class_='entry-date published')
+        date = date_element['datetime'] if date_element else 'No Date Found'
+        print(f"Title: {title}\nDate: {date}\n")
+        time.sleep(2)
+
+
+def fetch_robustel():
+    print("Fetching Robustel News...\n")
+    url = "https://www.robustel.com/category/news/"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    entries = soup.find_all('div', class_='list-item')
+
+    for entry in entries[:3]:
+        title = entry.find('h1', class_='list-item-title').a.text.strip()
+        print(f"Title: {title}\n")
+        time.sleep(2)
+
+
+def fetch_sdcard():
+    print("Fetching SD Card News...\n")
+    url = "https://www.sdcard.org/press/whatsnew/"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    for li in soup.find_all('li')[:3]:
+        date_tag = li.find('time', class_='updated entry-time')
+        if date_tag:
+            date = date_tag.get('datetime', '').strip()
+            title_tag = li.find('span', class_='bold')
+            title = title_tag.a.text.strip() if title_tag and title_tag.a else title_tag.text.strip() if title_tag else ''
+            print(f"Date: {date}\nTitle: {title}\n")
+            time.sleep(2)
+
+
+def fetch_stm():
+    print("Fetching STMicroelectronics News...\n")
+    url = "https://newsroom.st.com/"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    entries = soup.find_all('a', class_='swiper-slide stn-card stn-card--mobile-list')
+
+    for entry in entries[:3]:
+        title_tag = entry.find('h3')
+        date_tag = entry.find('div', class_='stn-card__date')
+        title = title_tag.get_text(strip=True) if title_tag else 'No Title'
+        date = date_tag.get_text(strip=True) if date_tag else 'No Date'
+        print(f"Title: {title}\nDate: {date}\n")
+        time.sleep(2)
+
+
+def fetch_samsung():
+    print("Fetching Samsung News...\n")
+    url = "https://news.samsung.com/global/latest"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    entries = soup.find('ul', class_='item').find_all('li')
+
+    for entry in entries[:3]:
+        title = entry.find('span', class_='title').text.strip()
+        date = entry.find('span', class_='date').text.strip()
+        print(f"Title: {title}\nDate: {date}\n")
+        time.sleep(2)
+
+
+def scrape_reolink_blog():
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
+    }
+    response = requests.get("https://reolink.com/blog/category/news/", headers=headers)
+
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        articles = soup.find_all('div', class_='wXzZUXnMGtTud3SFxLJy')
+        print(f"Number of articles found on Reolink: {len(articles)}")
+        entries = []
+
+        for article in articles[:3]:
+            title_tag = article.find('p', class_='xEzQ_N4GjtoQnoV_M9Bv').find('a') if article.find('p',
+                                                                                                   class_='xEzQ_N4GjtoQnoV_M9Bv') else None
+            date_tag = article.find('p', class_='TWnkX91XGjrLqaDYn59f')
+
+            if title_tag and date_tag:
+                title = title_tag.get_text(strip=True)
+                date = date_tag.get_text(strip=True)
+                entries.append((title, date))
+
+        for index, (title, date) in enumerate(entries, start=1):
+            print(f"Reolink Entry {index}:")
+            print(f"Title: {title}")
+            print(f"Date: {date}\n")
+    else:
+        print(f"Failed to retrieve the Reolink webpage. Status code: {response.status_code}")
+        time.sleep(2)
+
+
 def main():
     # Check internet connection before starting the scraping process
     while not is_connected():
         print("Internet connection not available. Retrying...")
         time.sleep(RETRY_DELAY)
-        
+
     print("Scraping Arducam Blog:")
     scrape_arducam_blog()
     print("\nScraping Ambarella News:")
@@ -773,7 +1251,7 @@ def main():
     print("Cytron News:")
     for entry in scrape_cytron_news():
         print(f"Title: {entry[0]}\nDate: {entry[1]}\n")
-        
+
     all_results = {
         "DFI Pressroom": parse_dfi_pressroom(),
         "DFRobot Blog": parse_dfrobot_blog(),
@@ -797,7 +1275,7 @@ def main():
         for result in results:
             print(result)
         time.sleep(2)
-        
+
     scrape_ecsipc_news()
     scrape_glinet_blog()
     scrape_gigadevice_news()
@@ -808,6 +1286,29 @@ def main():
     scrape_jetway_news()
     scrape_lenovo_press_releases()
     scrape_luckfox_products()
+
+    fetch_m5stack()
+    fetch_makerfabs()
+    fetch_mediatek()
+    fetch_microchip()
+    fetch_minixforum()
+    fetch_myirtech()
+    fetch_nxp()
+    fetch_norvi()
+    fetch_olimex()
+    fetch_onsemi()
+    fetch_orbbec()
+    fetch_picmg()
+    fetch_portwell()
+    fetch_qualcomm()
+    fetch_radxa()
+    fetch_revolutionpi()
+    fetch_robustel()
+    fetch_sdcard()
+    fetch_stm()
+    fetch_samsung()
+    scrape_reolink_blog()
+
 
 if __name__ == "__main__":
     main()
