@@ -1177,6 +1177,167 @@ def scrape_reolink_blog():
         print(f"Failed to retrieve the Reolink webpage. Status code: {response.status_code}")
         time.sleep(2)
 
+def parse_sapphiretech():
+    url = "https://www.sapphiretech.com/en/news"
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    }
+    response = requests.get(url, headers=headers)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    entries = soup.find_all('div', class_='listItem')
+
+    results = []
+    for entry in entries[:3]:
+        title_element = entry.find('h3')
+        title = title_element.text.strip() if title_element else 'No Title Found'
+        date_element = entry.find('time')
+        date = date_element.text.strip() if date_element else 'No Date Found'
+        results.append({'title': title, 'date': date})
+
+    print("Sapphiretech Entries:")
+    for entry in results:
+        print(f"Title: {entry['title']}")
+        print(f"Date: {entry['date']}\n")
+        time.sleep(2)
+
+
+
+def parse_seco():
+    response = requests.get("https://www.seco.com/blog/news/")
+    soup = BeautifulSoup(response.content, 'html.parser')
+    titles = [a.text.strip() for a in soup.find_all('a', href=True) if
+              a.find_parent('h3', class_='elementor-post__title')]
+
+    print("Seco News Titles:")
+    for title in titles[:3]:
+        print(title)
+        time.sleep(2)
+
+
+def parse_seeedstudio():
+    response = requests.get("https://www.seeedstudio.com/blog/news-center/")
+    soup = BeautifulSoup(response.content, 'html.parser')
+    articles = soup.find_all('article', class_='elementor-post')
+
+    print("Seeedstudio Titles:")
+    for article in articles[:3]:
+        title_elem = article.find('h3', class_='elementor-post__title').find('a')
+        if title_elem:
+            title = title_elem.text.strip()
+            print(f"Title: {title}")
+            time.sleep(2)
+
+
+def parse_sferalabs():
+    url = "https://sferalabs.cc/blog/"
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    }
+    response = requests.get(url, headers=headers)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    entries = soup.find_all('li')
+
+    print("Sferalabs Entries:")
+    for entry in entries[:3]:
+        title_element = entry.find('h3', class_='fusion-title-heading')
+        title = title_element.text.strip() if title_element else 'No Title Found'
+        date_element = entry.find('span', class_='fusion-tb-published-date')
+        date = date_element.text.strip() if date_element else 'No Date Found'
+        if title != 'No Title Found' and date != 'No Date Found':
+            print(f"Title: {title}")
+            print(f"Date: {date}\n")
+            time.sleep(2)
+
+
+def parse_sifive():
+    response = requests.get("https://www.sifive.com/press")
+    soup = BeautifulSoup(response.content, 'html.parser')
+
+    print("SiFive Press Releases:")
+    for article in soup.find_all('div', class_='PressReleases_article__Ca53e')[:3]:
+        date_tag = article.find('p').text.split('—')[-1].strip()
+        title_tag = article.find('a', class_='PressReleases_titleLink__T_E_d')
+        if title_tag:
+            title = title_tag.text.strip()
+            print(f"Date: {date_tag}, Title: {title}")
+            time.sleep(2)
+
+
+def parse_smartcow():
+    response = requests.get("https://www.smartcow.ai/press-releases-home")
+    soup = BeautifulSoup(response.content, 'html.parser')
+    entries = soup.find_all('div', class_='w-dyn-item')
+
+    print("SmartCow Press Releases:")
+    for entry in entries[:3]:
+        title_tag = entry.find('h1', class_='display-s-light')
+        date_tag = entry.find('div', class_='text-m-reg has--n700-text')
+        if title_tag and date_tag:
+            title = title_tag.get_text(strip=True)
+            date = date_tag.get_text(strip=True)
+            print(f"Title: {title}")
+            print(f"Date: {date}\n")
+            time.sleep(2)
+
+
+
+def parse_smlight():
+    response = requests.get("https://smlight.tech/shop/?orderby=date")
+    soup = BeautifulSoup(response.content, 'html.parser')
+    titles = [h2.text for h2 in soup.find_all('h2', class_='woocommerce-loop-product__title')]
+
+    print("SMLight Shop Titles:")
+    for title in titles[:3]:
+        print(title)
+        time.sleep(2)
+
+
+def parse_spacetouch():
+    response = requests.get("https://www.spacetouch.co/cat47")
+    soup = BeautifulSoup(response.content, 'html.parser')
+    translator = Translator()
+
+    print("SpaceTouch Translated Titles:")
+    entries = soup.find_all("div", class_="nwom")
+    for entry in entries[:3]:
+        title_tag = entry.find("div", class_="sim s24")
+        if title_tag:
+            title = title_tag.get_text(strip=True)
+            try:
+                translated_title = translator.translate(title, src='zh-cn', dest='en').text
+                print("Entry Title:", translated_title)
+            except Exception as e:
+                print(f"Failed to translate title: {title}. Error: {e}")
+                time.sleep(2)
+
+
+
+def parse_solidrun():
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")  # Run Chrome in headless mode
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+    driver.get("https://www.solid-run.com/press-room/")
+    soup = BeautifulSoup(driver.page_source, 'html.parser')
+    driver.quit()
+
+    entries = []
+    for header in soup.find_all('header', class_='entry-content-header'):
+        date_tag = header.find('time', class_='av-magazine-time')
+        date = date_tag.text.strip() if date_tag else 'No date found'
+
+        title_tag = header.find('h3', class_='av-magazine-title')
+        title = title_tag.text.strip() if title_tag else 'No title found'
+        entries.append((date, title))
+
+    print("SolidRun Press Releases:")
+    for date, title in entries[:3]:
+        print(f"Date: {date}, Title: {title}")
+        time.sleep(2)
+
 
 def main():
     # Check internet connection before starting the scraping process
@@ -1308,6 +1469,16 @@ def main():
     fetch_stm()
     fetch_samsung()
     scrape_reolink_blog()
+
+    parse_sapphiretech()
+    parse_seco()
+    parse_seeedstudio()
+    parse_sferalabs()
+    parse_sifive()
+    parse_smartcow()
+    parse_smlight()
+    parse_spacetouch()
+    parse_solidrun()
 
 
 if __name__ == "__main__":
