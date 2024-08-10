@@ -1338,6 +1338,390 @@ def parse_solidrun():
         print(f"Date: {date}, Title: {title}")
         time.sleep(2)
 
+def parse_seeedstudio():
+    response = requests.get("https://www.seeedstudio.com/blog/news-center/")
+    soup = BeautifulSoup(response.content, 'html.parser')
+    articles = soup.find_all('article', class_='elementor-post')[:5]
+
+    print("Seeedstudio News:")
+    for article in articles[:3]:
+        title_element = article.find('h3', class_='elementor-post__title').find('a')
+        title = title_element.text.strip()
+        date = article.find('span', class_='elementor-post-date').text.strip()
+        print(f"Title: {title}")
+        print(f"Date: {date}\n")
+    time.sleep(2)
+
+
+def parse_sunfounder():
+    response = requests.get("https://www.sunfounder.com/blogs/news")
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        articles = soup.find_all('div', class_='block-list__item-blog')
+
+        print("Sunfounder News:")
+        for article in articles[:3]:
+            title_tag = article.find('h2', class_='article-item__title').find('a')
+            date_tag = article.find('time', class_='article-item__meta-item')
+            if title_tag and date_tag:
+                title = title_tag.text.strip()
+                date = date_tag.text.strip()
+                print(f"Title: {title}")
+                print(f"Date: {date}\n")
+    else:
+        print(f"Failed to retrieve Sunfounder news. Status code: {response.status_code}")
+    time.sleep(2)
+
+
+def parse_synaptics():
+    url = "https://www.synaptics.com/company/newsroom"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    items = soup.find_all('li', class_='company-newsroom-row')
+
+    print("Synaptics Newsroom:")
+    for item in items[:3]:
+        date_tag = item.find('time')
+        title_tag = item.find('a', class_='desc_anchor')
+        if date_tag and title_tag:
+            date = date_tag.get_text(strip=True)
+            title = title_tag.get_text(strip=True)
+            print(f"Date: {date}")
+            print(f"Title: {title}\n")
+    time.sleep(2)
+
+
+def parse_flir():
+    url = "https://www.flir.in/news-center/"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    articles = soup.find_all('div', class_='Grid-cell u-sm-size1of2 u-md-size1of4')
+
+    print("FLIR News:")
+    for article in articles[:3]:
+        title = article.find('h4', class_='Article-title').text.strip()
+        print(f"Title: {title}\n")
+    time.sleep(2)
+
+
+def parse_terramaster():
+    response = requests.get("https://www.terra-master.com/global/press/")
+    soup = BeautifulSoup(response.content, 'html.parser')
+    news_items = soup.find_all('div', class_='news_list_item')
+
+    print("TerraMaster News:")
+    for item in news_items[:3]:
+        title_tag = item.find('a')
+        title = title_tag.text.strip() if title_tag else 'No title found'
+        date_tag = item.find('div', class_='news_item_subtitle')
+        date = date_tag.text.split('//')[0].strip() if date_tag else 'No date found'
+        print(f"Title: {title}")
+        print(f"Date: {date}\n")
+    time.sleep(2)
+
+
+def parse_toradex():
+    response = requests.get("https://www.toradex.com/news")
+    soup = BeautifulSoup(response.content, 'html.parser')
+    entries = soup.find_all('div', class_='item d-flex')
+
+    print("Toradex News:")
+    for entry in entries[:3]:
+        date = entry.find('div', class_='date').span.text.strip()
+        title = entry.find('h5').text.strip()
+        additional_text = entry.find('div', class_='card-text').find('p')
+        if additional_text:
+            title += additional_text.text.strip()
+        print(f"Date: {date}")
+        print(f"Title: {title}\n")
+    time.sleep(2)
+
+
+def parse_toshiba():
+    url = "https://toshiba.semicon-storage.com/ap-en/company/news.html"
+    response = requests.get(url)
+    if response.status_code != 200:
+        print(f"Failed to retrieve Toshiba news. Status code: {response.status_code}")
+        return
+
+    soup = BeautifulSoup(response.content, 'html.parser')
+    entries = soup.find_all('dl')
+
+    print("Toshiba News:")
+    for entry in entries[:3]:
+        date_tag = entry.find('dt')
+        title_tag = entry.find('dd', class_='comp_v3_0990__newslist__caption')
+        if date_tag and title_tag:
+            date = date_tag.get_text(strip=True)
+            title = title_tag.get_text(strip=True)
+            print(f"Date: {date}")
+            print(f"Title: {title}\n")
+    time.sleep(2)
+
+
+def parse_vecow():
+    response = requests.get("https://www.vecow.com/dispPageBox/vecow/VecowCP.aspx?ddsPageID=NEWS_EN")
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        list_items = soup.find_all('li')
+
+        print("Vecow News:")
+        for item in list_items[:3]:
+            title_div = item.find('div', class_='Title')
+            date_div = item.find('div', class_='Date')
+            if title_div and date_div:
+                title = title_div.get_text(strip=True)
+                date = date_div.get_text(strip=True)
+                print(f"Title: {title}")
+                print(f"Date: {date}\n")
+    else:
+        print(f"Failed to retrieve Vecow news. Status code: {response.status_code}")
+    time.sleep(2)
+
+
+def parse_youyeetoo():
+    response = requests.get("https://www.youyeetoo.com/blog/")
+    soup = BeautifulSoup(response.content, 'html.parser')
+    blog_items = soup.find_all('div', class_='blog_item')
+
+    print("Youyeetoo News:")
+    for item in blog_items[:3]:
+        date_tag = item.find('div', class_='date')
+        date = date_tag.text.strip() if date_tag else 'No date found'
+        title_tag = item.find('div', class_='title')
+        title = title_tag.text.strip() if title_tag else 'No title found'
+        print(f"Title: {title}")
+        print(f"Date: {date}\n")
+    time.sleep(2)
+
+
+def parse_zeus_ugent():
+    response = requests.get("https://zeus.ugent.be/blog/23-24/")
+    soup = BeautifulSoup(response.content, 'html.parser')
+    entries = []
+
+    print("Zeus UGent Blog:")
+    for blog_preview in soup.find_all('div', class_='content blog-preview'):
+        title_tag = blog_preview.find('a', class_='title')
+        date_tag = blog_preview.find('small', class_='column blogpreview-extra')
+        title = title_tag.text.strip() if title_tag else 'No title'
+        date = date_tag.text.split(' • ')[0].strip() if date_tag else 'No date'
+        entries.append({'title': title, 'date': date})
+
+    for entry in entries[:3]:
+        print(f"Title: {entry['title']}, Date: {entry['date']}\n")
+    time.sleep(2)
+
+def scrape_mekotronics():
+    url = "https://www.mekotronics.com/h-col-104.html"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+    }
+    response = requests.get(url, headers=headers)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        titles = [a['title'] for a in soup.find_all('a', class_='fk-productName')]
+        print("Mekotronics: ")
+        for title in titles[:3]:
+            print(f"Mekotronics Title: {title}")
+    else:
+        print(f"Failed to retrieve Mekotronics. Status code: {response.status_code}")
+    print()
+    time.sleep(2)
+
+
+def scrape_murata():
+    url = "https://corporate.murata.com/en-global/newsroom"
+    response = requests.get(url)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        news_div = soup.find('div', class_='c-news')
+        if news_div:
+            news_items = news_div.find_all('li', class_='c-news__item')
+            print("Murata: ")
+            for item in news_items[:3]:
+                date_elem = item.find('time')
+                date = date_elem['datetime'] if date_elem else "No date found"
+                title_elem = item.find('div', class_='c-news__text')
+                title = title_elem.text.strip() if title_elem else "No title found"
+                print(f"Murata Title: {title}\nDate: {date}\n")
+        else:
+            print("No news items found on Murata page.")
+    else:
+        print(f"Failed to retrieve Murata. Status code: {response.status_code}")
+    print()
+    time.sleep(2)
+
+
+def scrape_sipeed():
+    options = webdriver.ChromeOptions()
+    options.add_argument('--headless')
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    driver.get("https://wiki.sipeed.com/news/")
+    driver.implicitly_wait(3)
+    soup = BeautifulSoup(driver.page_source, 'html.parser')
+    driver.quit()
+    titles = [a.h2.get_text(strip=True) for a in soup.find_all('a', class_='blog_title')]
+    translator = Translator()
+    translated_titles = [translator.translate(title, src='zh-cn', dest='en').text for title in titles]
+    print("Sipeed: ")
+    for title in translated_titles[:3]:
+        print(f"Sipeed Translated Title: {title}")
+    print()
+    time.sleep(2)
+
+
+def scrape_variscite():
+    response = requests.get("https://www.variscite.com/system-on-module-blog/")
+    soup = BeautifulSoup(response.content, 'html.parser')
+    post_items = soup.find_all('div', class_='post-item')
+    print("variscite: ")
+    for post_item in post_items[:3]:
+        title = post_item.find('h2', itemprop='name headline').text.strip()
+        date = post_item.find('div', class_='date').text.strip()
+        print(f"Variscite Title: {title}\nDate: {date}\n")
+    print()
+    time.sleep(2)
+
+
+def scrape_waveshare():
+    options = webdriver.ChromeOptions()
+    options.add_argument('--headless')
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    url = "https://www.waveshare.com/new?dir=desc&order=position"
+    driver.get(url)
+    driver.implicitly_wait(10)
+    soup = BeautifulSoup(driver.page_source, 'html.parser')
+    driver.quit()
+    titles = [h2.a.get_text(strip=True) for h2 in soup.find_all('h2', class_='product-name')]
+    print("Waveshare: ")
+    for title in titles[:3]:
+        print(f"Waveshare Title: {title}")
+    print()
+    time.sleep(2)
+
+
+def scrape_nuvoton():
+    response = requests.get("https://www.nuvoton.com/news/news/all/")
+    soup = BeautifulSoup(response.content, 'html.parser')
+    rows = soup.find_all('div', class_='css_tr')
+    print("Nuvotron: ")
+    for row in rows[:3]:
+        cells = row.find_all('div', class_='css_td')
+        if len(cells) >= 2:
+            date = cells[0].get_text(strip=True)
+            title_tag = cells[1].find('a')
+            if title_tag:
+                title = title_tag.get('title', '').replace('&quot;', '"')
+                print(f"Nuvoton Title: {title}\nDate: {date}\n")
+    print()
+    time.sleep(2)
+
+
+def scrape_asrock():
+    options = webdriver.ChromeOptions()
+    options.add_argument('--headless')
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    url = "https://www.asrockind.com/en-gb/article-category/19"
+    driver.get(url)
+    driver.implicitly_wait(10)
+    soup = BeautifulSoup(driver.page_source, 'html.parser')
+    driver.quit()
+    articles = soup.find_all('div', class_='box-1 border-bottom pb-3 pt-3 pl-md-3')
+    print("As-Rocks: ")
+    for article in articles[:3]:
+        date_tag = article.find('span', class_='date')
+        date = date_tag.text.strip() if date_tag else "No Date Found"
+        title_tag = article.find('h4')
+        title = title_tag.text.strip() if title_tag else "No Title Found"
+        print(f"ASRock Title: {title}\nDate: {date}\n")
+    print()
+    time.sleep(2)
+
+
+def scrape_formuler():
+    response = requests.get("https://www.formuler.tv/news")
+    soup = BeautifulSoup(response.content, 'html.parser')
+    articles = soup.find_all('article', {'data-hook': 'post-list-item'})
+    print("Formuler: ")
+    for article in articles[:3]:
+        title_tag = article.find('div', {'data-hook': 'post-title'})
+        date_tag = article.find('span', {'data-hook': 'time-ago'})
+        if title_tag and date_tag:
+            title = title_tag.get_text(strip=True)
+            date = date_tag.get_text(strip=True)
+            print(f"Formuler Title: {title}\nDate: {date}\n")
+    print()
+    time.sleep(2)
+
+
+def scrape_luxonis():
+    options = webdriver.ChromeOptions()
+    options.add_argument('--headless')
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    url = "https://discuss.luxonis.com/blog"
+    driver.get(url)
+    driver.implicitly_wait(10)
+    soup = BeautifulSoup(driver.page_source, 'html.parser')
+    driver.quit()
+    entries = [item.find('h4').get_text(strip=True) for item in soup.find_all('a', class_='BlogList-item') if item.find('h4')]
+    print("Luxonis: ")
+    for title in entries[:3]:
+        print(f"Luxonis Title: {title}")
+    print()
+    time.sleep(2)
+
+
+def scrape_nordic():
+    response = requests.get("https://www.nordicsemi.com/Nordic-news")
+    soup = BeautifulSoup(response.content, 'html.parser')
+    news_items = soup.find_all('div', class_='news-archive-box')
+    print("Nordic: ")
+
+    for item in news_items[:3]:
+        text_wrap = item.find('div', class_='text-wrap')
+        date_tag = item.find('div', class_='tag overlay').find('div', class_='date')
+
+        # Proceed only if both title and date tags are found
+        if text_wrap and date_tag:
+            title_tag = text_wrap.find('p')
+            if title_tag:
+                title = title_tag.text.strip()
+                date = date_tag.text.strip()
+                print(f"Nordic Title: {title}\nDate: {date}\n")
+        else:
+            print("Skipping an item due to missing title or date information.")
+    print()
+    time.sleep(2)
+
+
+def scrape_quectel():
+    response = requests.get("https://www.quectel.com/company/news-and-pr/")
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.text, 'html.parser')
+        articles = soup.find_all('a', class_='group text-black no-underline')
+        print("Quectel: ")
+        for article in articles[:3]:
+            title = article.find('span', class_='text-lg text-black mb-3').text.strip()
+            link = article['href']
+            print(f"Quectel Title: {title}\nLink: {link}\n")
+    else:
+        print(f"Failed to retrieve Quectel. Status code: {response.status_code}")
+    print()
+    time.sleep(2)
+
+
+def scrape_renesas():
+    response = requests.get("https://www.renesas.com/us/en/about/newsroom#latest-press-releases")
+    soup = BeautifulSoup(response.content, 'html.parser')
+    items = soup.find_all('div', class_='item-wrapper press-releases-item-wrapper')
+    print("Renesas: ")
+    for item in items[:3]:
+        title = item.find('div', class_='item-title press-releases-item-title').text.strip()
+        date = item.find('time', class_='datetime press-releases-datetime')['datetime']
+        print(f"Renesas Title: {title}\nDate: {date}\n")
+    print()
+    time.sleep(2)
 
 def main():
     # Check internet connection before starting the scraping process
@@ -1479,6 +1863,30 @@ def main():
     parse_smlight()
     parse_spacetouch()
     parse_solidrun()
+
+    parse_seeedstudio()
+    parse_sunfounder()
+    parse_synaptics()
+    parse_flir()
+    parse_terramaster()
+    parse_toradex()
+    parse_toshiba()
+    parse_vecow()
+    parse_youyeetoo()
+    parse_zeus_ugent()
+
+    scrape_mekotronics()
+    scrape_murata()
+    scrape_sipeed()
+    scrape_variscite()
+    scrape_waveshare()
+    scrape_nuvoton()
+    scrape_asrock()
+    scrape_formuler()
+    scrape_luxonis()
+    scrape_nordic()
+    scrape_quectel()
+    scrape_renesas()
 
 
 if __name__ == "__main__":
