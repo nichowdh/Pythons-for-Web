@@ -3,6 +3,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
 
 # Set up Selenium WebDriver with options
@@ -21,8 +23,17 @@ try:
     # Open the URL
     driver.get(url)
 
+    # Wait for the news section to load (adjust the element you're waiting for if necessary)
+    WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.CLASS_NAME, 'latest-news'))
+    )
+
     # Get the page source after JavaScript has rendered
     page_source = driver.page_source
+
+    # Print the page source to check if content is loaded correctly
+    # (You can comment this out after confirming the correct content is loaded)
+    # print(page_source)
 
     # Parse the HTML content with BeautifulSoup
     soup = BeautifulSoup(page_source, 'html.parser')
