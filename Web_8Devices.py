@@ -20,12 +20,16 @@ if response.status_code == 200:
     # Initialize a list to store the titles
     titles = []
 
-    # Find all the sections with the class 'single-post container'
-    sections = soup.find_all('section', class_='single-post container')
+    # Find all the article links (news-article-card)
+    articles = soup.find_all('a', class_='news-article-card')
 
-    for section in sections[:3]:  # Limit to the first 3 entries
-        # Extract the title
-        title_tag = section.find('h3', class_='title')
+    if not articles:
+        print("No articles found.")
+
+    # Loop through the first 3 articles and extract the titles
+    for article in articles[:3]:
+        # Find the <h3> tag inside each article
+        title_tag = article.find('h3', class_='brxe-uzsxwg brxe-heading h6')
         title = title_tag.text.strip() if title_tag else 'No title found'
         titles.append(title)
 
