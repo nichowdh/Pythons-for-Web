@@ -16,7 +16,7 @@ try:
     articles = soup.find_all('article', class_='entry-content block')
 
     # Extract titles and dates
-    for article in articles:
+    for article in articles[:3]:
         title_tag = article.find('h3')
         date_tag = article.find('span', class_='date')
         
