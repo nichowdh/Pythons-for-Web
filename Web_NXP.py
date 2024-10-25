@@ -11,7 +11,7 @@ print("Press Release & News briefs\n")
 
 entries = soup.find_all('div', class_='card1-item')
 
-for entry in entries:
+for entry in entries[:3]:
     title = entry.find('h3', class_='card1-title').text.strip()
     date = entry.find('p', class_='metadata').text.strip()
     print(f"Title: {title}\nDate: {date}\n")
