@@ -17,7 +17,7 @@ titles = []
 dates = []
 
 # Iterate through each item to extract titles and dates
-for item in items:
+for item in items[:3]:
     # Find the title
     title_tag = item.find('span', class_='post-title')
     if title_tag:
