@@ -22,7 +22,7 @@ if response.status_code == 200:
     
     # Extract the titles and dates
     entries = []
-    for article in articles:
+    for article in articles[:3]:
         # Debug: Print the article content
         title_tag = article.find('p', class_='xEzQ_N4GjtoQnoV_M9Bv').find('a') if article.find('p', class_='xEzQ_N4GjtoQnoV_M9Bv') else None
         date_tag = article.find('p', class_='TWnkX91XGjrLqaDYn59f')
