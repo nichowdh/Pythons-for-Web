@@ -50,7 +50,7 @@ for card in cards:
     articles.append({'title': title, 'date': date})
 
 # Print the extracted data
-for article in articles:
+for article in articles[:3]:
     print(f"Title: {article['title']}")
     print(f"Date: {article['date']}\n")
 
