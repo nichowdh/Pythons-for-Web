@@ -30,7 +30,7 @@ for row in soup.find_all('tr', role='row'):
         continue
 
 # Print the titles and dates
-for title, date in entries:
+for title, date in entries[:3]:
     print(f"Title: {title}\nDate: {date}\n")
 
 # Close the Selenium browser session
