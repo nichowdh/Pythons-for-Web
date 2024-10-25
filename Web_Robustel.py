@@ -10,6 +10,6 @@ soup = BeautifulSoup(response.content, 'html.parser')
 
 entries = soup.find_all('div', class_='list-item')
 
-for entry in entries:
+for entry in entries[:3]:
     title = entry.find('h1', class_='list-item-title').a.text.strip()
     print(f"Title: {title}")
