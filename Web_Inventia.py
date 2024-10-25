@@ -30,7 +30,7 @@ for h4 in soup.find_all('h4'):
 
 # Print the extracted titles
 if titles:
-    for title in titles:
+    for title in titles[:3]:
         print(title)
 else:
     print("No titles found")
