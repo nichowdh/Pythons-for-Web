@@ -30,7 +30,7 @@ def parse_entry_titles_and_dates(response):
 parsed_entries = parse_entry_titles_and_dates(response)
 
 # Print parsed entries
-for entry in parsed_entries:
+for entry in parsed_entries[:3]:
     print(f"Title: {entry['title']}")
     print(f"Date: {entry['date']}")
     print("-" * 20)
