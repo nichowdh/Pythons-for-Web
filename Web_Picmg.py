@@ -33,7 +33,7 @@ if not entries:
     print("No entries found. The CSS selector might need adjustment.")
 
 # Loop through each entry and extract the title and date
-for entry in entries:
+for entry in entries[:3]:
     a_tag = entry.find('a')
     if a_tag:
         title_date = a_tag.text
