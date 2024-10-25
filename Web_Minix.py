@@ -21,5 +21,5 @@ for item in struct_items:
     
     entries.append((title, date))
 
-for entry in entries:
+for entry in entries[:3]:
     print(f"Title: {entry[0]}, Date: {entry[1]}")
