@@ -18,6 +18,7 @@ if response.status_code == 200:
     rows = soup.find_all('tr')
 
     entries = set()  # Use a set to store unique entries
+    count = 0  # Counter to keep track of entries
 
     # Iterate over each row to extract the title and date
     for row in rows:
@@ -29,8 +30,9 @@ if response.status_code == 200:
             date = date_tag.get_text(strip=True)
             entries.add((title, date))  # Add to set to ensure uniqueness
 
-    # Print the extracted entries
-    for title, date in entries:
+    # Print only the first 3 entries
+    for title, date in list(entries)[:3]:
         print(f"Title: {title}, Date: {date}")
+
 else:
     print(f"Failed to retrieve the webpage. Status code: {response.status_code}")
