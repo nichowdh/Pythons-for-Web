@@ -30,7 +30,7 @@ if response.status_code == 200:
 
        
     # Print the titles along with their dates
-    for entry in entries:
+    for entry in entries[:3]:
         print(f"Title: {entry[0]}")
         print(f"Date: {entry[1]}")
         print()
