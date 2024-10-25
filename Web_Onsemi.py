@@ -13,7 +13,7 @@ if response.status_code == 200:
     entries = soup.find_all('div', class_='card')
 
     # Loop through each entry and extract the title and date
-    for entry in entries:
+    for entry in entries[:3]:
         # Extract the date
         date_tag = entry.find('p').find('span')
         date = date_tag.text if date_tag else 'No date found'
