@@ -10,7 +10,7 @@ soup = BeautifulSoup(response.content, 'html.parser')
 
 entries = soup.find_all('div', class_='card card-wide card-release')
 
-for entry in entries:
+for entry in entries[:3]:
     date = entry.find('small', class_='card-date card-list-date').text.strip()
     title = entry.find('h3', class_='card-title card-list-title').a.text.strip()
     print(f"Title: {title}, Date: {date}")
