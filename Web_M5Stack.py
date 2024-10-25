@@ -22,5 +22,5 @@ for card in news_cards:
     
     entries.append({'title': title, 'date': date})
 
-for entry in entries:
+for entry in entries[:3]:
     print(f"Title: {entry['title']}, Date: {entry['date']}")
