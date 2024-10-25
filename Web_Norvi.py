@@ -13,7 +13,7 @@ articles = soup.find_all('article')
 entries = []
 
 # Iterate over the first 3 articles to extract the title and date
-for article in articles[:5]:
+for article in articles[:3]:
     title_tag = article.find('h3', class_='elementor-post__title').find('a')
     date_tag = article.find('span', class_='elementor-post-date')
     
