@@ -15,7 +15,7 @@ soup = BeautifulSoup(response.content, 'html.parser')
 articles = soup.find_all('article', class_='elementor-post')
 
 # Extract titles
-for article in articles:
+for article in articles[:3]:
     title_elem = article.find('h3', class_='elementor-post__title').find('a')
     if title_elem:
         title = title_elem.text.strip()
