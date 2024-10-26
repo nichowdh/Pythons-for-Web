@@ -11,7 +11,7 @@ soup = BeautifulSoup(response.content, 'html.parser')
 entries = soup.find('ul', class_='item').find_all('li')
 
 # Iterate through each <li> to extract title and date
-for entry in entries:
+for entry in entries[:3]:
     title = entry.find('span', class_='title').text.strip()
     date = entry.find('span', class_='date').text.strip()
     print(f"Title: {title}\nDate: {date}\n")
