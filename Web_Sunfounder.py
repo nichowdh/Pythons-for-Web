@@ -24,7 +24,7 @@ if response.status_code == 200:
             entries.append((title, date))
 
     # Print titles and dates
-    for title, date in entries:
+    for title, date in entries[:3]:
         print(f"Title: {title}\nDate: {date}\n")
 
 else:
