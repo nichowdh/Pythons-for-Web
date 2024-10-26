@@ -15,7 +15,7 @@ translator = Translator()
 entries = soup.find_all("div", class_="nwom")
 
 # Iterate through the entries and extract titles
-for entry in entries:
+for entry in entries[:3]:
     title_tag = entry.find("div", class_="sim s24")
     if title_tag:
         title = title_tag.get_text(strip=True)
