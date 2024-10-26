@@ -19,5 +19,5 @@ for li in soup.find_all('li'):
             title = title_tag.text.strip() if title_tag else ''
         entries.append((date, title))
 
-for date, title in entries:
+for date, title in entries[:3]:
     print(f"Date: {date}, Title: {title}")
