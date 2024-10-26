@@ -12,7 +12,7 @@ soup = BeautifulSoup(response.content, 'html.parser')
 articles = soup.find_all('article', class_='elementor-post')[:5]
 
 # Iterate through the articles and extract the required information
-for article in articles:
+for article in articles[:3]:
     title_element = article.find('h3', class_='elementor-post__title').find('a')
     title = title_element.text.strip()
     date = article.find('span', class_='elementor-post-date').text.strip()
