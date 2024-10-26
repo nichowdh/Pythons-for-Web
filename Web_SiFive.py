@@ -16,5 +16,5 @@ for article in soup.find_all('div', class_='PressReleases_article__Ca53e'):
         title = title_tag.text.strip()
         entries.append((date_tag, title))
 
-for date, title in entries:
+for date, title in entries[:3]:
     print(f"Date: {date}, Title: {title}")
