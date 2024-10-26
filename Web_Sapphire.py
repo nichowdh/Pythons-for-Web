@@ -22,5 +22,5 @@ for item in list_items:
     entries.append((date, title))
 
 # Print the entries
-for date, title in entries:
+for date, title in entries[:3]:
     print(f"Date: {date}, Title: {title}")
