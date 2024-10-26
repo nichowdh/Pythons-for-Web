@@ -9,7 +9,7 @@ response = requests.get("https://www.smartcow.ai/press-releases-home")
 soup = BeautifulSoup(response.content, 'html.parser')
 entries = soup.find_all('div', class_='w-dyn-item')
 
-for entry in entries:
+for entry in entries[:5]:
     title_tag = entry.find('h1', class_='display-s-light')
     date_tag = entry.find('div', class_='text-m-reg has--n700-text')
 
