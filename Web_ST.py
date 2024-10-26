@@ -9,7 +9,7 @@ response = requests.get("https://newsroom.st.com/")
 soup = BeautifulSoup(response.content, 'html.parser')
 entries = soup.find_all('a', class_='swiper-slide stn-card stn-card--mobile-list')
 
-for entry in entries:
+for entry in entries[:3]:
     title_tag = entry.find('h3')
     date_tag = entry.find('div', class_='stn-card__date')
 
