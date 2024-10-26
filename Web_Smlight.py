@@ -9,5 +9,5 @@ soup = BeautifulSoup(response.content, 'html.parser')
 
 titles = [h2.text for h2 in soup.find_all('h2', class_='woocommerce-loop-product__title')]
 
-for title in titles:
+for title in titles[:3]:
     print(title)
