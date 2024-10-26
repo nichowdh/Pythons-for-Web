@@ -14,7 +14,7 @@ soup = BeautifulSoup(response.content, 'html.parser')
 items = soup.find_all('li', class_='company-newsroom-row')
 
 # Iterate through each item and extract the title and date
-for item in items:
+for item in items[:3]:
     date_tag = item.find('time')
     title_tag = item.find('a', class_='desc_anchor')
     
