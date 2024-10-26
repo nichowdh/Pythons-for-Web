@@ -41,5 +41,5 @@ for header in soup.find_all('header', class_='entry-content-header'):
         entries.append((date, title))
 
 # Print the extracted data
-for date, title in entries:
+for date, title in entries[:3]:
     print(f"Date: {date}, Title: {title}")
