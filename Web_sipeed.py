@@ -28,5 +28,5 @@ translator = Translator()
 translated_titles = [translator.translate(title, src='zh-cn', dest='en').text for title in titles]
 
 # Print the translated titles
-for title in translated_titles:
+for title in translated_titles[:3]:
     print(title)
