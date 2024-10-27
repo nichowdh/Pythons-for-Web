@@ -12,7 +12,7 @@ soup = BeautifulSoup(response.content, 'html.parser')
 articles = soup.find_all('div', class_='Grid-cell u-sm-size1of2 u-md-size1of4')
 
 # Iterate through each article to extract title and link
-for article in articles:
+for article in articles[:3]:
     # Extract title
     title = article.find('h4', class_='Article-title').text.strip()
     
