@@ -11,7 +11,7 @@ soup = BeautifulSoup(response.content, 'html.parser')
 post_items = soup.find_all('div', class_='post-item')
 
 # Iterate through each post item to extract title and date
-for post_item in post_items:
+for post_item in post_items[:3]:
     # Extract title
     title = post_item.find('h2', itemprop='name headline').text.strip()
     
