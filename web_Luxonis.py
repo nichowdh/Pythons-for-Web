@@ -31,7 +31,7 @@ try:
     entries = []
 
     # Find all <a> elements with class 'BlogList-item'
-    for item in soup.find_all('a', class_='BlogList-item'):
+    for item in soup.find_all('a', class_='BlogList-item')[:3]:
         title_tag = item.find('h4')
         
         if title_tag:
