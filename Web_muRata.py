@@ -18,7 +18,7 @@ try:
         # Find all <li> elements inside the <ul> with class="c-news__items"
         news_items = news_div.find_all('li', class_='c-news__item')
 
-        for item in news_items:
+        for item in news_items[:3]:
             # Extract date
             date_elem = item.find('time')
             date = date_elem['datetime'] if date_elem else "No date found"
