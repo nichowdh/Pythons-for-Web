@@ -50,7 +50,7 @@ for article in articles:
     entries.append({"title": title, "date": date})
 
 # Print all extracted titles and dates
-for entry in entries:
+for entry in entries[:3]:
     print(f"Title: {entry['title']}")
     print(f"Date: {entry['date']}")
     print()  # Empty line for readability
