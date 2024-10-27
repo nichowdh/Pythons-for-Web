@@ -21,7 +21,7 @@ if response.status_code == 200:
     titles = [a['title'] for a in soup.find_all('a', class_='fk-productName')]
 
     # Print the titles
-    for title in titles[:5]:
+    for title in titles[:3]:
         print(title)
 else:
     print(f"Failed to retrieve the webpage. Status code: {response.status_code}")
