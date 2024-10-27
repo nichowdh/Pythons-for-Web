@@ -17,7 +17,7 @@ soup = BeautifulSoup(response.content, 'html.parser')
 # Find all <dl> elements within the specified <div> class
 entries = soup.find_all('dl')
 
-# Extract titles and dates from each <dl> element
+# Extract titles and dates from each <dl> element, limiting to the latest 3
 entry_data = []
 for entry in entries:
     date_tag = entry.find('dt')
@@ -26,8 +26,11 @@ for entry in entries:
         date = date_tag.get_text(strip=True)
         title = title_tag.get_text(strip=True)
         entry_data.append({'title': title, 'date': date})
+    # Stop after collecting the latest 3 entries
+    if len(entry_data) == 3:
+        break
 
-# Print all extracted data
+# Print the latest 3 entries if they were extracted
 if entry_data:
     for idx, entry in enumerate(entry_data, start=1):
         print(f"Entry {idx}:")
