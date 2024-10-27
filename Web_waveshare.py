@@ -23,5 +23,5 @@ driver.quit()
 titles = [h2.a.get_text(strip=True) for h2 in soup.find_all('h2', class_='product-name')]
 
 # Print the titles
-for title in titles:
+for title in titles[:3]:
     print(title)
