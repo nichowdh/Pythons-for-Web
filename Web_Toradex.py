@@ -11,7 +11,7 @@ soup = BeautifulSoup(response.content, 'html.parser')
 # Find all the entries
 entries = soup.find_all('div', class_='item d-flex')
 
-for entry in entries:
+for entry in entries[:3]:
     # Extract the date
     date = entry.find('div', class_='date').span.text.strip()
     # Extract the title
