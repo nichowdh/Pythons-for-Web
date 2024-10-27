@@ -16,7 +16,7 @@ dates = []
 titles = []
 
 # Iterate through each row to extract dates and titles
-for row in rows:
+for row in rows[:4]:
     # Find all cells within the row
     cells = row.find_all('div', class_='css_td')
     
