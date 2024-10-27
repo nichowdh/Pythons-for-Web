@@ -19,5 +19,5 @@ for blog_preview in soup.find_all('div', class_='content blog-preview'):
     
     entries.append({'title': title, 'date': date})
 
-for entry in entries:
+for entry in entries[:3]:
     print(f"Title: {entry['title']}, Date: {entry['date']}")
