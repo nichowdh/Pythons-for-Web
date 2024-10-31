@@ -3,28 +3,33 @@ import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 from googletrans import Translator
-from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.firefox.service import Service as FirefoxService
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
+from webdriver_manager.firefox import GeckoDriverManager
 
 
 # Set up the Selenium WebDriver with Chrome in headless mode
-options = Options()
-options.headless = True
-options.add_argument("--disable-gpu")
-options.add_argument("--no-sandbox")
-options.add_argument("--disable-dev-shm-usage")
+chrome_options = Options()
+chrome_options.headless = True
+chrome_options.add_argument("--disable-gpu")
+chrome_options.add_argument("--no-sandbox")
+chrome_options.add_argument("--disable-dev-shm-usage")
 
+firefox_options = FirefoxOptions()
+firefox_options.headless = True
 
 # Initialize WebDriver
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+chrome_driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 
 
 # List of URLs to scrape
-urls = [
+chrome_urls = [
     "https://developer.android.com/news",
     "https://www.u-blox.com/en/newsroom",
     "https://www.adata.com/in/news/",
@@ -33,7 +38,6 @@ urls = [
     "https://www.emporiaenergy.com/blog/?e-filter-4847f41-category=news",
     "https://www.industrialshields.com/blog/arduino-raspberry-pi-industrial-news-industry-4-0-iot-11",
     "https://inventia.online/news/",
-    "https://www.microchip.com/en-us/about/news-releases",
     "https://www.qualcomm.com/news/releases",
     "https://www.seco.com/news",
     "https://www.solid-run.com/press-room/",
@@ -45,6 +49,9 @@ urls = [
     "https://www.renesas.com/us/en/about/newsroom#latest-press-releases"
 ]
 
+# URL to scrape with Firefox (microchip.com)
+firefox_url = "https://www.microchip.com/en-us/about/news-releases"
+
 # Initialize an empty list to hold all the scraped data
 data = []
 
@@ -52,13 +59,14 @@ data = []
 translator = Translator()
 
 # Function to scrape each site and print the extracted titles and dates
-def scrape_site(url):
+def scrape_with_chrome(url):
     company_name = url.split("/")[2]  # Extracting the domain name as company name
     print(f"Scraping {url}...")
-    driver.get(url)
+    chrome_driver.get(url)
     time.sleep(10)  # Allow time for page load
 
-    soup = BeautifulSoup(driver.page_source, 'html.parser')
+    soup = BeautifulSoup(chrome_driver.page_source, 'html.parser')
+
 
     # Site-specific parsing based on structure
     if "developer.android.com" in url:
@@ -71,7 +79,7 @@ def scrape_site(url):
             time.sleep(2)
 
     elif "u-blox.com" in url:
-        titles = driver.find_elements(By.CSS_SELECTOR, 'a.intLink.w-full > h2.text-3xl')
+        titles = chrome_driver.find_elements(By.CSS_SELECTOR, 'a.intLink.w-full > h2.text-3xl')
         for title in titles[:3]:
             data.append([company_name, title.text.strip(), 'No date found'])
             print(f"Company: {company_name}, Title: {title.text.strip()}, Date: No date found")
@@ -112,7 +120,7 @@ def scrape_site(url):
             time.sleep(2)
 
     if "news.avnet.com" in url:
-        WebDriverWait(driver, 10).until(
+        WebDriverWait(chrome_driver, 10).until(
             EC.presence_of_all_elements_located((By.CLASS_NAME, "module_item"))
         )
         module_items = soup.find_all('div', class_='module_item')
@@ -160,15 +168,6 @@ def scrape_site(url):
             time.sleep(2)
 
 
-    elif "microchip.com" in url:
-        news_entries = soup.find_all('div', class_='result-box')
-        for entry in news_entries[:3]:
-            title = entry.find('h3').get_text(strip=True) if entry.find('h3') else 'No title found'
-            date = entry.find('p', class_='result-date').get_text(strip=True) if entry.find('p',
-                                                                                            class_='result-date') else 'No date found'
-            data.append([company_name, title, date])
-            print(f"Company: {company_name}, Title: {title}, Date: {date}")
-            time.sleep(2)
 
     elif "qualcomm.com" in url:
         cards = soup.find_all('div', class_='VerticalBlogCard_container__2fwPS')
@@ -187,7 +186,7 @@ def scrape_site(url):
 
     elif "seco.com" in url:
 
-        WebDriverWait(driver, 15).until(
+        WebDriverWait(chrome_driver, 15).until(
 
             EC.presence_of_all_elements_located((By.CLASS_NAME, 'media'))
 
@@ -286,15 +285,47 @@ def scrape_site(url):
     print("\n" + "-" * 50 + "\n")
 
 
+# Function to scrape Microchip site with Firefox
+def scrape_microchip_with_firefox():
+    company_name = "microchip.com"
+    print(f"Scraping {firefox_url} with Firefox...")
+    firefox_driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()), options=firefox_options)
+    firefox_driver.get(firefox_url)
+    time.sleep(3)  # Allow time for page load
+
+    soup = BeautifulSoup(firefox_driver.page_source, 'html.parser')
+    entries = []
+
+    # Find all table rows with the role attribute set to 'row'
+    for row in soup.find_all('tr', role='row'):
+        try:
+            title_tag = row.find('td', class_='title-column dont_sort').find('a')
+            date_tag = row.find_all('td')[1]
+
+            if title_tag and date_tag:
+                title = title_tag.get_text(strip=True)
+                date = date_tag.get_text(strip=True)
+                data.append([company_name, title, date])
+                print(f"Company: {company_name}, Title: {title}, Date: {date}")
+        except (AttributeError, IndexError) as e:
+            continue
+
+    firefox_driver.quit()
+    print("\n" + "-" * 50 + "\n")
+
 # Run the scraper for each URL
-for url in urls:
+for url in chrome_urls:
     try:
-        scrape_site(url)
+        scrape_with_chrome(url)
     except Exception as e:
         print(f"Error scraping {url}: {e}")
 
+# Scrape Microchip with Firefox
+scrape_microchip_with_firefox()
+
+
 # Close the WebDriver after all scraping is done
-driver.quit()
+chrome_driver.quit()
 
 # Convert the list to a DataFrame
 df = pd.DataFrame(data, columns=['Company', 'Titles', 'Date'])
