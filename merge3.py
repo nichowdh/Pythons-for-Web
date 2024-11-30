@@ -266,6 +266,83 @@ def scrape_news():
     else:
         print(f"Failed to retrieve Firefly content. Status code: {response.status_code}")
 
+        # Firefly News
+    url = "https://en.t-firefly.com/news.html"
+    response = requests.get(url)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        entries = soup.find_all('div', class_='news-list')
+        for entry in entries[:3]:
+            title_tag = entry.find('h4').find('a')
+            title = title_tag.get_text(strip=True) if title_tag else 'No title'
+            date_tag = entry.find('div', class_='other').find('span')
+            date = date_tag.get_text(strip=True) if date_tag else 'No date'
+            news_data.append({'source': 'Firefly', 'title': title, 'date': date})
+    else:
+        print(f"Failed to retrieve Firefly content. Status code: {response.status_code}")
+
+    # FriendlyElec Forum
+    url = "https://www.friendlyelec.com/Forum/viewforum.php?f=3"
+    response = requests.get(url)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        rows = soup.find_all('tr', class_='t-row clickable')
+        for row in rows[:3]:
+            title_tag = row.find('a', class_='topictitle')
+            title = title_tag.text.strip() if title_tag else 'No title found'
+            date_tag = row.find('small')
+            date = date_tag.text.strip() if date_tag else 'No date found'
+            news_data.append({'source': 'FriendlyElec', 'title': title, 'date': date})
+    else:
+        print(f"Failed to retrieve FriendlyElec content. Status code: {response.status_code}")
+
+    # GeekomPC News
+    url = "https://community.geekompc.com/forums/official-news-and-deals.38/"
+    response = requests.get(url)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        threads = soup.find_all('div', class_='structItem')
+        for thread in threads[:3]:
+            title_tag = thread.find('div', class_='structItem-title')
+            if title_tag:
+                title = title_tag.find_all('a')[-1].get_text(strip=True)
+                date_tag = thread.find('li', class_='structItem-startDate').find('time')
+                date = date_tag.get_text(strip=True) if date_tag else 'No date'
+                news_data.append({'source': 'GeekomPC', 'title': title, 'date': date})
+    else:
+        print(f"Failed to retrieve GeekomPC content. Status code: {response.status_code}")
+
+    # GigaDevice News
+    url = "https://www.gigadevice.com/about/news-and-event/news"
+    response = requests.get(url)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        entries = soup.find_all('div', class_='he_h2p2hul clearfix')
+        for entry in entries:
+            articles = entry.find_all('div', class_='he_h2p2hli fl')
+            for article in articles[:3]:
+                date = article.find('div', class_='he_h2p2htim').p.text.strip() if article.find('div',
+                                                                                                class_='he_h2p2htim') else 'No date'
+                title = article.find('div', class_='he_h2p2hxp').p.text.strip() if article.find('div',
+                                                                                                class_='he_h2p2hxp') else 'No title'
+                news_data.append({'source': 'GigaDevice', 'title': title, 'date': date})
+    else:
+        print(f"Failed to retrieve GigaDevice content. Status code: {response.status_code}")
+
+    # Elegoo Blog
+    url = "https://www.elegoo.com/pages/blog-collection#3d"
+    response = requests.get(url)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        blog_posts = soup.find_all('div', class_='blog-post')
+        for post in blog_posts[:3]:
+            title = post.find('h5').get_text(strip=True) if post.find('h5') else 'No title'
+            date = post.find('aside', class_='post-meta').get_text(strip=True) if post.find('aside',
+                                                                                            class_='post-meta') else 'No date'
+            news_data.append({'source': 'Elegoo', 'title': title, 'date': date})
+    else:
+        print(f"Failed to retrieve Elegoo content. Status code: {response.status_code}")
+
     # Print the news data
     for entry in news_data:
         print(f"Source: {entry['source']}")
