@@ -343,6 +343,165 @@ def scrape_news():
     else:
         print(f"Failed to retrieve Elegoo content. Status code: {response.status_code}")
 
+    # GetTobyte Semiconductor Blogs
+    url = "https://gettobyte.com/semiconductor-chip-blogs/"
+    response = requests.get(url)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        entries = soup.find_all('div', class_='serv-box-2 s2')
+        for entry in entries[:3]:
+            title = entry.find('h5').text.strip() if entry.find('h5') else 'No title'
+            news_data.append({'source': 'GetTobyte', 'title': title, 'date': 'No date'})
+    else:
+        print(f"Failed to retrieve GetTobyte content. Status code: {response.status_code}")
+
+        # Hubitat Blog
+
+    # scrape_hubitat
+    url = "https://hubitat.com/blog"
+    response = requests.get(url)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        entries = soup.find_all('div', class_='BlogItem_item__OCiDd')
+        for entry in entries[:3]:
+            title = entry.find('h2', class_='BlogItem_title__9_nUp').get_text(strip=True) if entry.find('h2',
+                                                                                                            class_='BlogItem_title__9_nUp') else 'No title'
+            date = entry.find('p', class_='BlogItem_date__NaQEt').get_text(strip=True) if entry.find('p',
+                                                                                                         class_='BlogItem_date__NaQEt') else 'No date'
+            news_data.append({'source': 'Hubitat', 'title': title, 'date': date})
+    else:
+        print(f"Failed to retrieve Hubitat content. Status code: {response.status_code}")
+
+    # scrape_jetway
+    url = "https://jetwayipc.com/jetwaynews/?lang=en"
+    response = requests.get(url)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        post_items = soup.find_all('div', class_='post-item')
+        for item in post_items[:3]:
+            title = item.find('h5', class_='post-title').text.strip() if item.find('h5',
+                                                                                   class_='post-title') else 'No title'
+            news_data.append({'source': 'Jetway IPC', 'title': title, 'date': 'No date'})
+    else:
+        print(f"Failed to retrieve jetway content. Status code: {response.status_code}")
+
+    # scrape_m5stack
+    url = "https://m5stack.com/explore?page=1"
+    response = requests.get(url)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        news_cards = soup.find_all('div', class_='news-card')
+        for card in news_cards[:3]:
+            title = card.find('div', class_='news-card-title').find('a').text.strip() if card.find('div',
+                                                                                                   class_='news-card-title').find(
+                'a') else 'No title'
+            date = card.find('div', class_='news-card-date').text.strip() if card.find('div',
+                                                                                       class_='news-card-date') else 'No date'
+            news_data.append({'source': 'M5Stack', 'title': title, 'date': date})
+    else:
+        print(f"Failed to retrieve m5stack content. Status code: {response.status_code}")
+
+
+    # scrape_makerfabs
+    url = "https://www.makerfabs.com/blog"
+    response = requests.get(url)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        items = soup.find_all('div', class_='post-item')
+        for item in items[:3]:
+            title = item.find('span', class_='post-title').get_text(strip=True) if item.find('span',
+                                                                                             class_='post-title') else 'No title'
+            date = item.find('div', class_='post-posed-date').get_text(strip=True) if item.find('div',
+                                                                                                class_='post-posed-date') else 'No date'
+            news_data.append({'source': 'Makerfabs', 'title': title, 'date': date})
+    else:
+        print(f"Failed to retrieve makerfabs content. Status code: {response.status_code}")
+
+    # The Minix Forum News
+    url = "https://theminixforum.com/index.php?forums/news-announcements.2/"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    struct_items = soup.find_all('div', class_='structItem')
+    for item in struct_items[:3]:
+        title_tag = item.find('div', class_='structItem-title').find('a')
+        date_tag = item.find('li', class_='structItem-startDate').find('time')
+        news_data.append({
+            "source": "The Minix Forum",
+            "title": title_tag.text.strip(),
+            "date": date_tag['datetime']
+        })
+
+    # NXP Newsroom
+    url = "https://www.nxp.com/company/about-nxp/newsroom:NEWSROOM"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    entries = soup.find_all('div', class_='card1-item')
+    for entry in entries[:3]:
+        title = entry.find('h3', class_='card1-title').text.strip()
+        date = entry.find('p', class_='metadata').text.strip()
+        news_data.append({
+            "source": "NXP",
+            "title": title,
+            "date": date
+        })
+
+    # Norvi Blog
+    url = "https://norvi.lk/blog/"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    articles = soup.find_all('article')
+    for article in articles[:3]:
+        title_tag = article.find('h3', class_='elementor-post__title').find('a')
+        date_tag = article.find('span', class_='elementor-post-date')
+        news_data.append({
+            "source": "Norvi",
+            "title": title_tag.get_text(strip=True),
+            "date": date_tag.get_text(strip=True)
+        })
+
+    # Olimex News
+    url = "https://www.olimex.com/"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    entries = soup.find_all('div', class_='news')
+    for entry in entries[:3]:
+        title_tag = entry.find('h2')
+        date_tag = entry.find('div', class_='details').find('b')
+        news_data.append({
+            "source": "Olimex News",
+            "title": title_tag.get_text(strip=True) if title_tag else 'No title',
+            "date": date_tag.get_text(strip=True) if date_tag else 'No date'
+        })
+
+    # Olimex Products
+    url = "https://www.olimex.com/Products/"
+    response1 = requests.get(url)
+    soup = BeautifulSoup(response1.content, 'html.parser')
+    entries = soup.find_all('div', class_='pricing left')
+    for entry in entries[:3]:
+        title_tag = entry.find('p')
+        price_tag = entry.find('div', class_='pricing default')
+        news_data.append({
+            "source": "Olimex Products",
+            "title": title_tag.get_text(strip=True) if title_tag else 'No title',
+            "date": price_tag.get_text(strip=True) if price_tag else 'Price not found'
+        })
+
+    # ON Semiconductor News
+    url = "https://www.onsemi.com/company/news-media/in-the-news"
+    response = requests.get(url)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        entries = soup.find_all('div', class_='card')
+        for entry in entries[:3]:
+            date_tag = entry.find('p').find('span')
+            title_tag = entry.find('h6').find('a')
+            news_data.append({
+                "source": "ON Semiconductor",
+                "title": title_tag.text if title_tag else 'No title found',
+                "date": date_tag.text if date_tag else 'No date found'
+            })
+
     # Print the news data
     for entry in news_data:
         print(f"Source: {entry['source']}")
