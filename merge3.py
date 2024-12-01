@@ -502,6 +502,60 @@ def scrape_news():
                 "date": date_tag.text if date_tag else 'No date found'
             })
 
+    # Radxa
+    url = "https://radxa.com/news/"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    news_items = soup.select('ul.news_TIAz > li')
+    for item in news_items[:3]:
+        title_tag = item.select_one('div.new_t_gfEZ > h2')
+        title = title_tag.text.strip() if title_tag else 'No title found'
+        date_tag = item.select_one('p.time_soVr')
+        date = date_tag.text.strip() if date_tag else 'No date found'
+        news_data.append({'source': 'Radxa', 'title': title, 'date': date})
+
+    # Robustel
+    url = "https://www.robustel.com/category/news/"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    entries = soup.find_all('div', class_='list-item')
+    for entry in entries[:3]:
+        title = entry.find('h1', class_='list-item-title').a.text.strip()
+        news_data.append({'source': 'Robustel', 'title': title, 'date': 'No date found'})
+
+    # SD Association
+    url = "https://www.sdcard.org/press/whatsnew/"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    for li in soup.find_all('li')[:3]:
+        date_tag = li.find('time', class_='updated entry-time')
+        date = date_tag.get('datetime', '').strip() if date_tag else 'No date found'
+        title_tag = li.find('span', class_='bold')
+        title = title_tag.a.text.strip() if title_tag and title_tag.a else title_tag.text.strip() if title_tag else 'No title found'
+        news_data.append({'source': 'SD Association', 'title': title, 'date': date})
+
+    # STMicroelectronics
+    url = "https://newsroom.st.com/"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    entries = soup.find_all('a', class_='swiper-slide stn-card stn-card--mobile-list')
+    for entry in entries[:3]:
+        title_tag = entry.find('h3')
+        title = title_tag.get_text(strip=True) if title_tag else 'No title found'
+        date_tag = entry.find('div', class_='stn-card__date')
+        date = date_tag.get_text(strip=True) if date_tag else 'No date found'
+        news_data.append({'source': 'STMicroelectronics', 'title': title, 'date': date})
+
+    # Samsung
+    url = "https://news.samsung.com/global/latest"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    entries = soup.find('ul', class_='item').find_all('li')
+    for entry in entries[:3]:
+        title = entry.find('span', class_='title').text.strip()
+        date = entry.find('span', class_='date').text.strip()
+        news_data.append({'source': 'Samsung', 'title': title, 'date': date})
+
     # Print the news data
     for entry in news_data:
         print(f"Source: {entry['source']}")
