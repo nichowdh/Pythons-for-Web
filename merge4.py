@@ -189,22 +189,109 @@ def scrape_news():
             title += additional_text.text.strip()
         news_data.append({'Title': title, 'Date': date, 'Source': 'Toradex'})
 
-    # Toshiba Semiconductor
-    url = "https://toshiba.semicon-storage.com/ap-en/company/news.html"
-    response = requests.get(url)
+    # Vecow
+    url_vecow = "https://www.vecow.com/dispPageBox/vecow/VecowCP.aspx?ddsPageID=NEWS_EN"
+    response = requests.get(url_vecow)
     if response.status_code == 200:
         soup = BeautifulSoup(response.content, 'html.parser')
-        entries = soup.find_all('dl')
-        for entry in entries[:3]:
-            date_tag = entry.find('dt')
-            title_tag = entry.find('dd', class_='comp_v3_0990__newslist__caption')
-            if date_tag and title_tag:  # Check if both elements exist
-                date = date_tag.text.strip()
-                title = title_tag.text.strip()
-                news_data.append({'title': title, 'date': date, 'source': 'Toshiba Semiconductor'})
-            else:
-                # Handle missing data gracefully
-                news_data.append({'Title': 'No title found', 'Date': 'No date found', 'Source': 'Toshiba Semiconductor'})
+        list_items = soup.find_all('li')
+        for item in list_items[:3]:
+            title_div = item.find('div', class_='Title')
+            date_div = item.find('div', class_='Date')
+            if title_div and date_div:
+                title = title_div.get_text(strip=True)
+                date = date_div.get_text(strip=True)
+                news_data.append({'Source': 'Vecow', 'Title': title, 'Date': date})
+
+    # Youyeetoo
+    url_youyeetoo = "https://www.youyeetoo.com/blog/"
+    response = requests.get(url_youyeetoo)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        blog_items = soup.find_all('div', class_='blog_item')
+        for item in blog_items[:3]:
+            date_tag = item.find('div', class_='date')
+            title_tag = item.find('div', class_='title')
+            date = date_tag.text.strip() if date_tag else 'No date found'
+            title = title_tag.text.strip() if title_tag else 'No title found'
+            news_data.append({'Source': 'Youyeetoo', 'Title': title, 'Date': date})
+
+    # Zeus
+    url_zeus = "https://zeus.ugent.be/blog/23-24/"
+    response = requests.get(url_zeus)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        for blog_preview in soup.find_all('div', class_='content blog-preview')[:3]:
+            title_tag = blog_preview.find('a', class_='title')
+            date_tag = blog_preview.find('small', class_='column blogpreview-extra')
+            title = title_tag.text.strip() if title_tag else 'No title'
+            date = date_tag.text.split(' • ')[0].strip() if date_tag else 'No date'
+            news_data.append({'Source': 'Zeus', 'Title': title, 'Date': date})
+
+    # Murata
+    url_murata = "https://corporate.murata.com/en-global/newsroom"
+    response = requests.get(url_murata)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        news_div = soup.find('div', class_='c-news')
+        if news_div:
+            news_items = news_div.find_all('li', class_='c-news__item')
+            for item in news_items[:3]:
+                date_elem = item.find('time')
+                date = date_elem['datetime'] if date_elem else "No date found"
+                title_elem = item.find('div', class_='c-news__text')
+                title = title_elem.text.strip() if title_elem else "No title found"
+                news_data.append({'Source': 'Murata', 'Title': title, 'Date': date})
+
+    # Variscite
+    url_variscite = "https://www.variscite.com/system-on-module-blog/"
+    response = requests.get(url_variscite)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        post_items = soup.find_all('div', class_='post-item')
+        for post_item in post_items[:3]:
+            title = post_item.find('h2', itemprop='name headline').text.strip()
+            date = post_item.find('div', class_='date').text.strip()
+            news_data.append({'Source': 'Variscite', 'Title': title, 'Date': date})
+
+    # Nuvoton
+    url_nuvoton = "https://www.nuvoton.com/news/news/all/"
+    response = requests.get(url_nuvoton)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        rows = soup.find_all('div', class_='css_tr')
+        for row in rows[:4]:
+            cells = row.find_all('div', class_='css_td')
+            if len(cells) >= 2:
+                date = cells[0].get_text(strip=True)
+                title_tag = cells[1].find('a')
+                if title_tag:
+                    title = title_tag.get('title', '').replace('&quot;', '"')
+                    news_data.append({'Source': 'Nuvoton', 'Title': title, 'Date': date})
+
+    # Formuler
+    url_formuler = "https://www.formuler.tv/news"
+    response = requests.get(url_formuler)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        articles = soup.find_all('article', {'data-hook': 'post-list-item'})
+        for article in articles[:3]:
+            title_tag = article.find('div', {'data-hook': 'post-title'})
+            date_tag = article.find('span', {'data-hook': 'time-ago'})
+            if title_tag and date_tag:
+                title = title_tag.get_text(strip=True)
+                date = date_tag.get_text(strip=True)
+                news_data.append({'Source': 'Formuler', 'Title': title, 'Date': date})
+
+    # Quectel
+    url_quectel = "https://www.quectel.com/company/news-and-pr/"
+    response = requests.get(url_quectel)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        articles = soup.find_all('a', class_='group text-black no-underline')
+        for article in articles[:3]:
+            title = article.find('span', class_='text-lg text-black mb-3').text.strip()
+            news_data.append({'Source': 'Quectel', 'Title': title, 'Date': 'No date provided'})
 
     return news_data
 
