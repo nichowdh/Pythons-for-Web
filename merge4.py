@@ -124,6 +124,88 @@ def scrape_news():
         date = entry.find('span', class_='date').text.strip()
         news_data.append({'Source': 'Samsung', 'Title': title, 'Date': date})
 
+    # 1. Seeed Studio
+    url = "https://www.seeedstudio.com/blog/news-center/"
+    response = requests.get(url)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        articles = soup.find_all('article', class_='elementor-post')[:3]
+        for article in articles:
+            title = article.find('h3', class_='elementor-post__title').find('a').text.strip()
+            date = article.find('span', class_='elementor-post-date').text.strip()
+            news_data.append({'Title': title, 'Date': date, 'Source': 'Seeed Studio'})
+
+    # 2. SunFounder
+    url = "https://www.sunfounder.com/blogs/news"
+    response = requests.get(url)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        articles = soup.find_all('div', class_='block-list__item-blog')
+        for article in articles[:3]:
+            title = article.find('h2', class_='article-item__title').find('a').text.strip()
+            date = article.find('time', class_='article-item__meta-item').text.strip()
+            news_data.append({'Title': title, 'Date': date, 'Source': 'SunFounder'})
+
+    # 3. Synaptics
+    url = "https://www.synaptics.com/company/newsroom"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    items = soup.find_all('li', class_='company-newsroom-row')
+    for item in items[:3]:
+        title = item.find('a', class_='desc_anchor').text.strip()
+        date = item.find('time').text.strip()
+        news_data.append({'Title': title, 'Date': date, 'Source': 'Synaptics'})
+
+    # 4. FLIR
+    url = "https://www.flir.in/news-center/"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    articles = soup.find_all('div', class_='Grid-cell u-sm-size1of2 u-md-size1of4')
+    for article in articles[:3]:
+        title = article.find('h4', class_='Article-title').text.strip()
+        news_data.append({'Title': title, 'Date': 'N/A', 'Source': 'FLIR'})
+
+    # 5. Terra Master
+    url = "https://www.terra-master.com/global/press/"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    news_items = soup.find_all('div', class_='news_list_item')
+    for item in news_items[:3]:
+        title = item.find('a').text.strip() if item.find('a') else 'No title found'
+        date = item.find('div', class_='news_item_subtitle').text.split('//')[0].strip() if item.find('div',
+                                                                                                          class_='news_item_subtitle') else 'No date found'
+        news_data.append({'Title': title, 'Date': date, 'Source': 'Terra Master'})
+
+    # 6. Toradex
+    url = "https://www.toradex.com/news"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    entries = soup.find_all('div', class_='item d-flex')
+    for entry in entries[:3]:
+        date = entry.find('div', class_='date').span.text.strip()
+        title = entry.find('h5').text.strip()
+        additional_text = entry.find('div', class_='card-text').find('p')
+        if additional_text:
+            title += additional_text.text.strip()
+        news_data.append({'Title': title, 'Date': date, 'Source': 'Toradex'})
+
+    # Toshiba Semiconductor
+    url = "https://toshiba.semicon-storage.com/ap-en/company/news.html"
+    response = requests.get(url)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        entries = soup.find_all('dl')
+        for entry in entries[:3]:
+            date_tag = entry.find('dt')
+            title_tag = entry.find('dd', class_='comp_v3_0990__newslist__caption')
+            if date_tag and title_tag:  # Check if both elements exist
+                date = date_tag.text.strip()
+                title = title_tag.text.strip()
+                news_data.append({'title': title, 'date': date, 'source': 'Toshiba Semiconductor'})
+            else:
+                # Handle missing data gracefully
+                news_data.append({'Title': 'No title found', 'Date': 'No date found', 'Source': 'Toshiba Semiconductor'})
+
     return news_data
 
 
