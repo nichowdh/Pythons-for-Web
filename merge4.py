@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from googletrans import Translator
+import pandas as pd
 import time
 
 
@@ -296,11 +297,22 @@ def scrape_news():
     return news_data
 
 
-# Run the function and display results with a 2-second pause between outputs
+# Scrape news entries
 news_entries = scrape_news()
+
+# Create a pandas DataFrame
+df = pd.DataFrame(news_entries)
+
+# Print the results to the terminal with a 2-second delay between each
 for entry in news_entries:
     print(f"Source: {entry['Source']}")
     print(f"Title: {entry['Title']}")
     print(f"Date: {entry['Date']}")
     print()
     time.sleep(2)  # Pause for 2 seconds between each output
+
+
+# Write data to an Excel file
+df.to_excel('Merge_4.xlsx', index=False, engine='openpyxl')
+
+print("\nData has been written to scraped_news.xlsx")
