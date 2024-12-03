@@ -37,18 +37,18 @@ def scrape_news():
         print(f"Failed to retrieve Semtech content. Status code: {response.status_code}")
 
 
-        # AAEON Product News (list/product-news)
-        url = 'https://www.aaeon.com/en/news/list/product-news'
-        response = requests.get(url)
-        if response.status_code == 200:
-            soup = BeautifulSoup(response.text, 'html.parser')
-            entries = soup.find_all('div', class_='item_cell', limit=3)
-            for entry in entries:
-                title = entry.find('h3').get_text(strip=True)
-                date = entry.find('span', class_='display_date').get_text(strip=True)
-                news_data.append({'source': 'AAEON (list/product-news)', 'title': title, 'date': date})
-        else:
-            print(f"Failed to retrieve AAEON (list/product-news) content. Status code: {response.status_code}")
+    # AAEON Product News (list/product-news)
+    url = 'https://www.aaeon.com/en/news/list/product-news'
+    response = requests.get(url)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.text, 'html.parser')
+        entries = soup.find_all('div', class_='item_cell', limit=3)
+        for entry in entries:
+            title = entry.find('h3').get_text(strip=True)
+            date = entry.find('span', class_='display_date').get_text(strip=True)
+            news_data.append({'source': 'AAEON (list/product-news)', 'title': title, 'date': date})
+    else:
+        print(f"Failed to retrieve AAEON (list/product-news) content. Status code: {response.status_code}")
 
     # Ahlendorf News
     url = "https://ahlendorf-news.com/en/overview/"
