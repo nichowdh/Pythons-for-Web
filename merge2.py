@@ -63,7 +63,7 @@ def scrape_with_chrome(url):
     company_name = url.split("/")[2]  # Extracting the domain name as company name
     print(f"Scraping {url}...")
     chrome_driver.get(url)
-    time.sleep(10)  # Allow time for page load
+    time.sleep(15)  # Allow time for page load
 
     soup = BeautifulSoup(chrome_driver.page_source, 'html.parser')
 
@@ -309,6 +309,7 @@ def scrape_microchip_with_firefox():
                 print(f"Company: {company_name}, Title: {title}, Date: {date}")
         except (AttributeError, IndexError) as e:
             continue
+    return entries
 
     firefox_driver.quit()
     print("\n" + "-" * 50 + "\n")
@@ -334,5 +335,5 @@ df = pd.DataFrame(data, columns=['Company', 'Titles', 'Date'])
 print(df)
 
 # Save the data to an Excel file
-df.to_excel("merge2.xlsx", index=False)
-print("Data saved to 'merge2.xlsx'")
+df.to_excel("Merge_2.xlsx", index=False)
+print("Data saved to 'Merge_2.xlsx'")
