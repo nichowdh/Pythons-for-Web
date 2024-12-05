@@ -231,8 +231,8 @@ def save_to_excel(data):
         df = pd.DataFrame(data)
         print("Data collected:", df)  # Debug print
         # Save to Excel file
-        df.to_excel("output.xlsx", index=False)
-        print("Data saved to output.xlsx")
+        df.to_excel("Merge_1.xlsx", index=False)
+        print("Data saved to Merge_1.xlsx")
     else:
         print("No data to save")
 
